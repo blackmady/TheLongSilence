@@ -1,5 +1,5 @@
-// Multi-shot survey: boots once, then walks a list of scripted setups,
-// screenshotting each. Much faster than one browser launch per frame.
+// 多镜头巡检：启动一次，然后遍历一列脚本化场景，逐个截图。
+// 比每帧启动一次浏览器快得多。
 //   node tools/survey.mjs [--w 1600] [--h 900] [--only name]
 import { chromium } from 'playwright';
 import { bootGame } from './boot.mjs';

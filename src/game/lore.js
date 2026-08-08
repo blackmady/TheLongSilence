@@ -1,183 +1,182 @@
 /* ============================================================================
-   Written content. The mystery only works if there is something to actually
-   find, so: seven Cantos (one per Resonator), a set of derelict logs, and
-   reference entries that unlock as you scan.
+   文字内容。谜团只有在确有可寻之物时才能成立，因此这里有：
+   七段圣歌（对应七个共鸣器）、一组废墟日志，以及随扫描进度解锁的图鉴条目。
    ========================================================================== */
 
 export const CANTOS = [
   {
-    id: 'canto1', title: 'The First Canto', sub: 'RESONATOR I — ATTUNED',
+    id: 'canto1', title: '第一圣歌', sub: '共鸣器 I — 已调谐',
     body: [
-      'We built the listening towers first, before the cities, before the ships.',
-      'Not to speak. To hear.',
-      'For eleven thousand years we heard nothing, and called it loneliness. Then we learned to listen correctly, and heard everything, and called it something else.',
+      '我们最先建造的是聆听之塔，先于城市，先于舰船。',
+      '不是为了诉说。是为了聆听。',
+      '一万一千年来，我们什么也没听见，并将那称之为孤独。后来我们学会了正确地聆听，听见了一切，并将那称之为别的东西。',
     ],
-    q: 'The sky is not empty. It is holding its breath.',
+    q: '天空并非空旷。它正屏住呼吸。',
   },
   {
-    id: 'canto2', title: 'The Second Canto', sub: 'RESONATOR II — ATTUNED',
+    id: 'canto2', title: '第二圣歌', sub: '共鸣器 II — 已调谐',
     body: [
-      'A signal is a shape pressed into noise. We had assumed the noise was the medium and the shape was the message.',
-      'It is the other way around.',
-      'The stars are the punctuation. We had been reading the gaps.',
+      '信号是压入噪声中的形状。我们曾以为噪声是媒介，形状是讯息。',
+      '事实恰恰相反。',
+      '星辰是标点。我们一直在阅读那些间隙。',
     ],
-    q: 'What speaks does not need a mouth. It needs only somewhere quiet.',
+    q: '会说话的并不需要嘴巴。它只需要一处安静的地方。',
   },
   {
-    id: 'canto3', title: 'The Third Canto', sub: 'RESONATOR III — ATTUNED',
+    id: 'canto3', title: '第三圣歌', sub: '共鸣器 III — 已调谐',
     body: [
-      'The Assembly voted to answer. The vote was not close.',
-      'Nine hundred worlds tuned themselves to a single note and held it for a year, and at the end of that year the note came back changed, and we understood that we had been asked a question.',
-      'The record of the question survives. The record of our answer does not.',
+      '议会投票决定回应。票数相差悬殊。',
+      '九百个世界将自己调谐到同一个音符，持续了一年；一年之后，那个音符带着变化归来，我们才明白自己曾被问了一个问题。',
+      '那个问题的记录留存了下来。而我们答案的记录，没有。',
     ],
-    q: 'We were so proud to be heard that we forgot to ask who was listening.',
+    q: '我们为被听见而骄傲，却忘了问是谁在听。',
   },
   {
-    id: 'canto4', title: 'The Fourth Canto', sub: 'RESONATOR IV — ATTUNED',
+    id: 'canto4', title: '第四圣歌', sub: '共鸣器 IV — 已调谐',
     body: [
-      'There was no war. Let that be recorded plainly, because those who come after will assume there was a war.',
-      'There was a decision, and it was unanimous, and it took four days.',
-      'The lights were left on. The orbits were left tidy. The archives were left open.',
+      '没有战争。请将这一点如实记录，因为后来者会理所当然地认为发生过战争。',
+      '那是一次决定，全体一致，历时四天。',
+      '灯火留亮着。轨道留整齐了。档案留敞开着。',
     ],
-    q: 'A civilisation that leaves the door unlocked did not flee. It walked.',
+    q: '一个不锁门的文明并非逃离。它是从容离去。',
   },
   {
-    id: 'canto5', title: 'The Fifth Canto', sub: 'RESONATOR V — ATTUNED',
+    id: 'canto5', title: '第五圣歌', sub: '共鸣器 V — 已调谐',
     body: [
-      'Attunement is not travel. Nothing moves. The Resonators do not open a path — they widen an aperture that was always there, the way an eye widens.',
-      'You do not go through. You are simply, afterwards, on the other side of having gone.',
-      'Those who returned could not describe it. Those who could describe it did not return.',
+      '调谐并非旅行。什么都没有移动。共鸣器并不打开一条路径——它们只是拓宽了一直存在的那道孔洞，就像眼睛睁开那样。',
+      '你并非穿过去。你只是，之后，处在了“已经过去”的另一侧。',
+      '归来的人无法描述它。能描述它的人没有归来。',
     ],
-    q: 'Distance was a habit of ours. We are trying to break it.',
+    q: '距离是我们的老习惯。我们正在努力戒掉它。',
   },
   {
-    id: 'canto6', title: 'The Sixth Canto', sub: 'RESONATOR VI — ATTUNED',
+    id: 'canto6', title: '第六圣歌', sub: '共鸣器 VI — 已调谐',
     body: [
-      'Seven towers. Seven notes. We placed them apart so that no single accident, no single madness, no single grief could sound them all.',
-      'And then we sounded them all.',
-      'If you are reading this you have found six. Consider carefully whether you want the seventh. Consider that we left this warning, and that we ignored our own.',
+      '七座塔。七个音符。我们将它们彼此分离，好让任何一场意外、任何一场疯狂、任何一场悲恸，都无法将它们尽数奏响。',
+      '然后我们将它们尽数奏响了。',
+      '如果你读到这些，你已经找到了六座。请慎重考虑是否想要第七座。请想一想：我们留下了这则警告，而我们自己无视了它。',
     ],
-    q: 'Curiosity is the only thing that has ever cost us everything, and the only thing worth the price.',
+    q: '好奇心是唯一曾让我们失去一切的东西，也是唯一值得付出代价的东西。',
   },
   {
-    id: 'canto7', title: 'The Seventh Canto', sub: 'RESONATOR VII — ATTUNED',
+    id: 'canto7', title: '第七圣歌', sub: '共鸣器 VII — 已调谐',
     body: [
-      'The Aperture is open.',
-      'We are not gone. We are not dead. We are quiet, which is a thing you will understand in a moment, and never afterwards be able to explain.',
-      'Come in. Or do not. Both are answers, and we have learned to respect the second one.',
-      'The towers will keep sounding either way. Someone should be listening.',
+      '孔洞敞开着。',
+      '我们没有离去。我们没有死亡。我们只是安静——这一点，你片刻之后就会明白，并且再也无法向人解释。',
+      '进来吧。或者不进来。两种都是回答，而我们已学会尊重第二种。',
+      '无论如何，塔都会继续奏响。总该有人倾听。',
     ],
-    q: 'This is the long silence. It is not empty. It is full of everyone who came before you, waiting to see what you do.',
+    q: '这就是那漫长的沉默。它并不空旷。它满载着所有先于你而来的人，等待着看你如何行动。',
   },
 ];
 
 export const LOGS = [
   {
-    id: 'log_orion', title: 'Salvage Tug ORION-9', sub: 'RECOVERED FLIGHT LOG',
+    id: 'log_orion', title: '打捞拖船 猎户座-9', sub: '回收的飞行日志',
     body: [
-      'Day 41. Third pass through the debris shell. Still nothing that reads as damage. Every hull here was opened from the inside, carefully, with tools.',
-      'Day 44. Kesh says the stations were depressurised on a schedule. Sector by sector. Like closing up a house.',
-      'Day 51. We found a nursery. Toys stacked. Lights on a timer that is still running after forty thousand years. I want to go home.',
+      '第 41 天。第三次穿过残骸带。依然没有任何能被解读为损伤的痕迹。这里的每一具船壳都是从内部被打开的，小心翼翼地，用工具。',
+      '第 44 天。凯什说那些空间站是按计划逐区泄压的。一个扇区接一个扇区。就像在收拾一所房子。',
+      '第 51 天。我们找到了一间育婴室。玩具码放整齐。定时器上的灯光在四万年之后仍在运行。我想回家。',
     ],
   },
   {
-    id: 'log_veyle', title: 'Survey Vessel VEYLE', sub: 'PARTIAL TRANSCRIPT',
+    id: 'log_veyle', title: '勘测船 维尔号', sub: '部分通话记录',
     body: [
-      '— it is not a language, it is an invitation, and the difference matters —',
-      '— tell the Institute the towers are not artefacts, they are instruments, and they are still in tune —',
-      '— if you are hearing this do not approach the seventh, I am asking you, I am —',
+      '——那不是一种语言，那是一份邀请，而这区别至关重要——',
+      '——告诉研究院，那些塔不是文物，它们是乐器，而且至今依然音准——',
+      '——如果你听到这段录音，请不要靠近第七座，我求你，我——',
     ],
   },
   {
-    id: 'log_hollow', title: 'The Hollow Fleet', sub: 'ARCHIVE FRAGMENT',
+    id: 'log_hollow', title: '虚空舰队', sub: '档案残片',
     body: [
-      'Eleven hundred vessels are recorded as entering the Silence in the last two centuries. Ninety-four returned.',
-      'Of those, every crew reported the same detail unprompted: that the stars appeared, briefly, to be arranged.',
-      'No two crews agreed on the arrangement.',
+      '据记载，过去两个世纪里共有一千一百艘舰船驶入那片沉默。九十四艘归来。',
+      '其中，每艘船的船员都主动报告了同一处细节：那些星辰，曾短暂地，呈现出某种排列。',
+      '没有任何两艘船的船员，对那排列有一致的描述。',
     ],
   },
   {
-    id: 'log_seeker', title: 'PALE SEEKER — Commission', sub: 'YOUR ORDERS',
+    id: 'log_seeker', title: '苍白探寻者 — 委任状', sub: '你的任务',
     body: [
-      'You are the eleven hundred and first.',
-      'Chart what you can. Scan what you find. Attune what will let you.',
-      'The Institute does not expect you back. The Institute has never expected anyone back. Please prove the Institute wrong, or at least prove it interesting.',
+      '你是第一千一百零一个。',
+      '测绘你能测绘的。扫描你找到的。调谐愿意接纳你的。',
+      '研究院并不指望你回来。研究院从未指望过任何人回来。请证明研究院错了，或者至少，证明它值得等待。',
     ],
   },
 ];
 
 export const TYPE_INFO = {
   terran: {
-    label: 'Terrestrial · Class T',
-    text: 'Silicate world with liquid-water hydrosphere and an oxidising atmosphere. Rare, and rarely quiet — where the Choir settled, they settled here.',
+    label: '类地 · T 级',
+    text: '硅酸盐世界，拥有液态水水圈与氧化性大气。罕见，且罕有宁静——合唱团若要定居，定居之处便是这里。',
   },
   ocean: {
-    label: 'Pelagic · Class O',
-    text: 'Global ocean over a rock mantle. Archipelagic land at best. High albedo, violent weather, and a habit of hiding things under three kilometres of water.',
+    label: '远洋 · O 级',
+    text: '岩质地幔之上覆盖着全球性海洋。最多只有群岛般的陆地。高反照率、暴烈的天气，以及把东西藏进三千米水下而不让人发现的老习惯。',
   },
   desert: {
-    label: 'Arid · Class D',
-    text: 'Hydrosphere lost to escape or subduction. Preserves surface structures better than any other world type, which is why the Institute keeps sending people here.',
+    label: '干旱 · D 级',
+    text: '水圈因逃逸或俯冲而消失。比任何其他世界类型都更能保存地表结构，这正是研究院不断派人来此的原因。',
   },
   barren: {
-    label: 'Barren · Class B',
-    text: 'Airless silicate body. Every impact for four billion years is still legible on the surface. The most honest worlds there are.',
+    label: '荒芜 · B 级',
+    text: '无大气硅酸盐天体。四十亿年间每一次撞击的痕迹都清晰可辨。宇宙中最诚实的那些世界。',
   },
   ice: {
-    label: 'Glacial · Class I',
-    text: 'Water-ice shell over a probable subsurface ocean. Tidal flexing keeps the lineae fresh. Something is usually moving underneath.',
+    label: '冰川 · I 级',
+    text: '水冰壳层之下可能潜藏着地下海洋。潮汐应力让条纹保持新鲜。有什么东西通常正在下面移动。',
   },
   lava: {
-    label: 'Molten · Class L',
-    text: 'Tidally tortured or simply young. Crustal fissures expose the mantle directly. Approach envelopes are advisory rather than survivable.',
+    label: '熔融 · L 级',
+    text: '被潮汐折磨，或者只是太年轻。地壳裂隙直接暴露地幔。接近包线只是建议，而非承诺你能生还。',
   },
   toxic: {
-    label: 'Venusian · Class V',
-    text: 'Runaway greenhouse under an optically thick aerosol deck. Surface pressure sufficient to crush most survey hulls in under a minute.',
+    label: '金星式 · V 级',
+    text: '光学厚度极大的气溶胶云盖之下，失控的温室效应。表面压力足以在一分钟内压碎大多数勘测船壳。',
   },
   iron: {
-    label: 'Ferrous · Class F',
-    text: 'Stripped planetary core, mantle lost to a collision that is no longer in the record. Densities that make orbital mechanics interesting.',
+    label: '铁质 · F 级',
+    text: '被剥离的行星核心，地幔早已在一次不再见于记录中的碰撞里丢失。其密度让轨道力学变得饶有趣味。',
   },
   gas: {
-    label: 'Gas Giant · Class G',
-    text: 'Hydrogen–helium envelope with no meaningful surface. Zonal banding driven by internal heat. The Choir used them as anchors, never as homes.',
+    label: '气态巨行星 · G 级',
+    text: '氢氦包层，没有真正意义上的表面。纬向条纹由内部热量驱动。合唱团将它们用作锚点，从不作为家园。',
   },
 };
 
 export const STAR_INFO = {
-  M: 'Red dwarf. Parsimonious, patient, and likely to outlive every other object in this catalogue by a factor of a thousand.',
-  K: 'Orange dwarf. The quiet optimum — stable output, long main sequence, generous habitable zone.',
-  G: 'Yellow main-sequence star. Unremarkable in every respect, which is precisely why life keeps turning up around them.',
-  F: 'Yellow-white dwarf. Hot, bright, short-tempered; its habitable zone drifts outward faster than biospheres can follow.',
-  A: 'White main-sequence star. Strong ultraviolet flux. Beautiful, sterilising.',
-  B: 'Blue giant. Enormous, profligate, and already dying. Expect a shell of ionised gas and no old worlds.',
-  WD: 'White dwarf. A stellar core with the star stripped off it. Earth-sized, sun-massed, cooling toward permanent dark.',
-  PSR: 'Neutron star. Twenty kilometres across and heavier than the sun. The beam is not aimed at you. Probably.',
-  C: 'Carbon giant. Soot-veiled and deep red; its own dust makes it hard to see and harder to love.',
+  M: '红矮星。节俭、耐心，很可能比本目录中任何其他天体都长寿一千倍。',
+  K: '橙矮星。安静的优选——输出稳定、主序寿命长、宜居带慷慨。',
+  G: '黄色主序星。各方面都平平无奇，而生命偏偏不断在它们周围出现。',
+  F: '黄白矮星。炽热、明亮、脾气暴躁；它的宜居带向外漂移的速度快过生物圈能跟上的程度。',
+  A: '白色主序星。强烈的紫外线通量。美丽，且杀菌。',
+  B: '蓝巨星。巨大、挥霍，而且已在衰亡。期待看到电离气体壳层，以及不存在任何古老世界。',
+  WD: '白矮星。恒星被剥离后剩下的核心。地球大小，太阳质量，正冷却向永恒的黑暗。',
+  PSR: '中子星。直径二十公里，比太阳还重。那道射束不是冲着你来的。大概。',
+  C: '碳巨星。裹着烟尘，深红色；它自己的尘埃使它难以被看见，更难被喜爱。',
 };
 
 export const ANOMALY_INFO = {
   resonator: {
-    label: 'RESONATOR',
-    text: 'A Choir instrument. Non-reflective across every band we can generate. It is not inert — it is waiting, and it can tell the difference between a rock and a visitor.',
+    label: '共鸣器',
+    text: '合唱团的乐器。在我们能生成的所有波段上都不反射。它并非惰性——它在等待，并且能分辨一块岩石与一位来访者。',
   },
   derelict: {
-    label: 'DERELICT STATION',
-    text: 'Choir orbital infrastructure. Undamaged, unpowered in the conventional sense, and still holding station to within a metre after forty millennia.',
+    label: '废弃空间站',
+    text: '合唱团的轨道基础设施。完好无损，在传统意义上不通电，并且在四万年之后仍将自身保持在误差一米以内的站位上。',
   },
   wreck: {
-    label: 'WRECKAGE',
-    text: 'Not Choir. Hull alloys and fabrication signatures consistent with the last two centuries of human expeditions into the Silence.',
+    label: '残骸',
+    text: '不是合唱团的。船壳合金与制造特征，与过去两个世纪人类深入那片沉默的远征记录一致。',
   },
   beacon: {
-    label: 'SIGNAL BEACON',
-    text: 'A relay. Broadcasts a bearing and nothing else. Every beacon points at something, and no beacon explains why.',
+    label: '信号信标',
+    text: '一座中继站。只广播一个方位，别无其他。每个信标都指向某个东西，而没有任何信标解释为什么。',
   },
 };
 
 export const INTRO_LINES = [
-  { who: 'INSTITUTE RELAY', text: 'Fold complete. You are inside the Silence, Seeker.' },
-  { who: 'INSTITUTE RELAY', text: 'Forty thousand years ago nine hundred worlds went quiet in four days. Find out why.' },
-  { who: 'PALE SEEKER', text: 'Scanner online. Seven Resonators are out there. Bring back what they say.' },
+  { who: '研究院中继', text: '跃迁完成。你已身处沉默之中，探寻者。' },
+  { who: '研究院中继', text: '四万年前，九百个世界在四天内归于沉寂。查明原因。' },
+  { who: '苍白探寻者', text: '扫描仪在线。七座共鸣器就在那里。把它们的话语带回来。' },
 ];

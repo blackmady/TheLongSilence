@@ -1,9 +1,9 @@
-// Which quality tier does each engine actually pick, and what does it render at?
+// 每个引擎实际挑选了哪个画质档位，它又渲染在什么分辨率？
 //
-// This exists because the tier was being decided by navigator.deviceMemory,
-// which only Chromium implements — so Safari silently ran a lower tier on any
-// hardware, at 1.5x on a 2x display. A bug that only appears in one browser
-// needs a check that runs in more than one browser.
+// 它存在是因为档位曾由 navigator.deviceMemory 决定，而它只有 Chromium
+// 实现——于是 Safari 在任何硬件上都悄悄运行更低的档位，在 2x 显示屏上
+// 只有 1.5x。只在一种浏览器里出现的 Bug，需要一种在不止一种浏览器里
+// 运行的检查。
 //
 //   node tools/tiers.mjs [url]
 import { chromium, webkit } from 'playwright';

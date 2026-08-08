@@ -149,7 +149,7 @@ export class Cockpit {
     this._navPool = [];
     this._v = new THREE.Vector3();
     for (const s of Object.values(this.screens)) {
-      s.draw((gfx) => { gfx.text('INITIALISING', 20, 40, { size: 16 }); });
+      s.draw((gfx) => { gfx.text('正在初始化', 20, 40, { size: 16 }); });
     }
   }
 
@@ -527,52 +527,51 @@ function fmtDist(d) {
 }
 
 /**
- * What the pilot should do right now, in one line.
+ * 飞行员此刻该做什么，一行说清。
  *
- * This is the thing the cockpit was missing. Every readout on the old panel
- * described state — speed, attitude, a target's classification — and none of it
- * said what to press or why, so sitting down at the helm told you nothing.
+ * 这正是旧座舱缺失的东西。旧面板上的每项读数都在描述状态——速度、姿态、
+ * 目标的分类——而没有任何一项告诉你该按哪个键、为什么，于是坐上驾驶席
+ * 什么都看不明白。
  */
 function nextAction(game) {
   const t = game.target;
   if (game.scanProgress > 0.001) {
-    return { line: `SCANNING   ${Math.round(game.scanProgress * 100)}%`, hot: true };
+    return { line: `扫描中   ${Math.round(game.scanProgress * 100)}%`, hot: true };
   }
-  if (!t) return { line: 'AIM AT A WORLD', hot: false };
-  if (t.scanned) return { line: 'CATALOGUED  —  PICK A NEW TARGET', hot: false };
-  if (game.scanTarget === t) return { line: 'HOLD   F   TO SCAN', hot: true };
-  if (game.autopilot) return { line: 'AUTOPILOT  —  CLOSING', hot: false };
-  return { line: 'OUT OF RANGE  —  G  TO APPROACH', hot: false };
+  if (!t) return { line: '瞄准一颗星球', hot: false };
+  if (t.scanned) return { line: '已编目  —  选择新目标', hot: false };
+  if (game.scanTarget === t) return { line: '按住  F  扫描', hot: true };
+  if (game.autopilot) return { line: '自动驾驶  —  接近中', hot: false };
+  return { line: '超出范围  —  按  G  接近', hot: false };
 }
 
 /**
- * The glareshield strip: one line, the standing order, at eye level.
+ * 遮光板指示条：一行文字，常驻命令，与视线齐平。
  *
- * 720 x 40 design units on a 360 x 20 mm panel, which is about 690 x 38 device
- * pixels from the seat on a 2x display — one line of type and no more, which is
- * the whole brief for an annunciator. Anything that needs a second line belongs
- * on the main display underneath.
+ * 在 360 x 20 mm 面板上是 720 x 40 设计单位，在 2x 显示屏上从座位看过去
+ * 大约是 690 x 38 设备像素——只有一行字，不能再多，这就是指示器的全部
+ * 使命。任何需要第二行的东西都该放到下方的主显示上。
  */
 function drawDirective(g, game, ctx) {
   const { w, h } = g;
   const d = game.directive;
   const warn = ctx.warn;
-  const label = warn ? 'CAUTION' : 'DIRECTIVE';
+  const label = warn ? '警报' : '指引';
   const col = warn ? '#ff8a5e' : AM;
-  // the lit edge, which is what a real annunciator has instead of a border
+  // 发光的边缘——真正的指示器用它代替边框
   g.fill(8, 8, 6, h - 16, col);
   g.text(label, 28, h * 0.66, { size: 17, color: col, track: 3.6 });
-  const body = warn ? warn : d ? String(d.short).toUpperCase() : 'STAND BY';
+  const body = warn ? warn : d ? String(d.short).toUpperCase() : '待命';
   g.text(body, 208, h * 0.68, { size: 30, color: warn ? '#ffe4d4' : HI, track: 1.6 });
   if (!warn && d && d.total > 1) {
     g.text(`${d.done}/${d.total}`, w - 26, h * 0.68, { size: 26, color: AM, align: 'right' });
-    // a progress rule under the type, so the count is also a shape
+    // 文字下方的进度条，让计数同时成为一种形状
     const p = Math.max(0, Math.min(1, d.done / d.total));
     const bw = w - 340;
     g.fill(208, h - 11, bw * p, 3, AM);
     g.fill(208 + bw * p, h - 11, bw * (1 - p), 3, 'rgba(255,196,138,0.18)');
   } else if (!warn) {
-    g.text('INSTITUTE RELAY', w - 26, h * 0.68, { size: 17, color: DIM, align: 'right', track: 2.6 });
+    g.text('研究院中继', w - 26, h * 0.68, { size: 17, color: DIM, align: 'right', track: 2.6 });
   }
 }
 
@@ -640,8 +639,8 @@ function drawMain(g, game, ctx) {
   g.fill(4, 4, w - 8, 15, 'rgba(143,228,255,0.13)');
   g.fill(4, 4, 2, 15, AM);
   const dir = game.directive;
-  g.text('DIR', 16, 15, { size: 7, color: AM, track: 1.6 });
-  g.text(dir ? String(dir.short).toUpperCase() : 'STAND BY', 41, 15,
+  g.text('指引', 16, 15, { size: 7, color: AM, track: 1.6 });
+  g.text(dir ? String(dir.short).toUpperCase() : '待命', 41, 15,
     { size: 8.5, color: VAL, track: 0.9 });
   if (dir && dir.total > 1) {
     g.text(`${dir.done}/${dir.total}`, 236, 15, { size: 8, color: AM, align: 'right' });
@@ -659,14 +658,14 @@ function drawMain(g, game, ctx) {
   const AY = 23, AH = 126;
 
   // ---- TARGET: what the instruction refers to
-  const tg = g.group(4, AY, 218, AH, 'TARGET  ·  DESIGNATION', { accent: CY });
+  const tg = g.group(4, AY, 218, AH, '目标  ·  编号', { accent: CY });
   if (t) {
     const d = Math.max(0, t.absPos.distanceTo(ship.absPos) - (t.radius || 0));
-    const kind = t.kind === 'anomaly' ? (t.anomalyType || 'ANOMALY').toUpperCase()
-      : t.kind === 'star' ? `${t.spec.cls}-CLASS STAR`
-        : (t.spec?.type || 'WORLD').toUpperCase();
+    const kind = t.kind === 'anomaly' ? (t.anomalyType || '异常').toUpperCase()
+      : t.kind === 'star' ? `${t.spec.cls} 型恒星`
+        : (t.spec?.type || '星球').toUpperCase();
     g.text(t.name.toUpperCase(), tg.x + 2, tg.y + 11, { size: 11, color: '#eef9ff', track: 0.6 });
-    g.text(`${kind}${t.scanned ? '  ·  CAT' : ''}`, tg.x + 2, tg.y + 21,
+    g.text(`${kind}${t.scanned ? '  ·  已编目' : ''}`, tg.x + 2, tg.y + 21,
       { size: 6.5, color: t.scanned ? '#8affc1' : DIM, track: 1.4 });
 
     const rel = _v0.copy(t.absPos).sub(ship.absPos);
@@ -679,13 +678,13 @@ function drawMain(g, game, ctx) {
     const clo = -rel.normalize().dot(ship.vel);
 
     const CW = 69;
-    kv('RANGE', fmtDist(d), tg.x + 2, tg.y + 34, AM);
-    kv('BEARING', `${brg >= 0 ? '+' : ''}${brg.toFixed(0)}°`, tg.x + 2 + CW, tg.y + 34);
-    kv('ELEV', `${elv >= 0 ? '+' : ''}${elv.toFixed(0)}°`, tg.x + 2 + CW * 2, tg.y + 34);
-    kv('CLOSURE', `${clo.toFixed(1)} km/s`, tg.x + 2, tg.y + 58,
+    kv('距离', fmtDist(d), tg.x + 2, tg.y + 34, AM);
+    kv('方位', `${brg >= 0 ? '+' : ''}${brg.toFixed(0)}°`, tg.x + 2 + CW, tg.y + 34);
+    kv('仰角', `${elv >= 0 ? '+' : ''}${elv.toFixed(0)}°`, tg.x + 2 + CW * 2, tg.y + 34);
+    kv('接近率', `${clo.toFixed(1)} km/s`, tg.x + 2, tg.y + 58,
       clo > 0.05 ? '#8affc1' : DIM);
-    kv('DIA', `${((t.radius || 0) * 2).toFixed(0)} km`, tg.x + 2 + CW, tg.y + 58);
-    kv('SIG', t.scanned ? 'RESOLVED' : 'PARTIAL', tg.x + 2 + CW * 2, tg.y + 58,
+    kv('直径', `${((t.radius || 0) * 2).toFixed(0)} km`, tg.x + 2 + CW, tg.y + 58);
+    kv('信号', t.scanned ? '已解析' : '部分', tg.x + 2 + CW * 2, tg.y + 58,
       t.scanned ? '#8affc1' : AM);
 
     /* Bearing tape, across the bottom of the box. Ninety degrees either side of
@@ -702,28 +701,28 @@ function drawMain(g, game, ctx) {
     const bk = Math.max(0, Math.min(1, brg / 180 + 0.5));
     g.fill(TX + TW * bk - 1.5, TY - 2, 3, 16, AM);
     g.text('−90', TX, TY + 21, { size: 6, color: DIM });
-    g.text('NOSE', TX + TW / 2, TY + 21, { size: 6, color: DIM, align: 'center' });
+    g.text('机头', TX + TW / 2, TY + 21, { size: 6, color: DIM, align: 'center' });
     g.text('+90', TX + TW, TY + 21, { size: 6, color: DIM, align: 'right' });
   } else {
-    g.text('NO TARGET', tg.x + 2, tg.y + 11, { size: 11, color: DIM, track: 1.6 });
-    g.text('AIM AT A WORLD TO DESIGNATE', tg.x + 2, tg.y + 21,
+    g.text('无目标', tg.x + 2, tg.y + 11, { size: 11, color: DIM, track: 1.6 });
+    g.text('瞄准一颗星球以指定目标', tg.x + 2, tg.y + 21,
       { size: 6.5, color: DIM, track: 1.4 });
     for (let i = 0; i < 6; i++) {
-      kv(['RANGE', 'BEARING', 'ELEV', 'CLOSURE', 'DIA', 'SIG'][i], '- - -',
+      kv(['距离', '方位', '仰角', '接近率', '直径', '信号'][i], '- - -',
         tg.x + 2 + (i % 3) * 69, tg.y + 34 + Math.floor(i / 3) * 24, DIM);
     }
   }
 
   // ---- FLIGHT: six columns in tick wells. Shape, not type.
-  const fl = g.group(226, AY, 148, AH, 'FLIGHT  ·  PLANT');
+  const fl = g.group(226, AY, 148, AH, '飞行  ·  动力');
   {
     const bars = [
-      ['THR', ship.throttle, ship.boost > 0.1 ? AM : CY],
-      ['PWR', P, CY],
-      ['CORE', ship.heat, ship.heat > 0.82 ? '#ff6b5e' : AM],
-      ['FLD', ship.foldCharge, ship.foldCharge > 0.99 ? '#8affc1' : CY],
-      ['HUL', ship.hull, ship.hull < 0.4 ? '#ff6b5e' : '#8affc1'],
-      ['SNK', 0.18 + ship.heat * 0.5, CY],
+      ['油门', ship.throttle, ship.boost > 0.1 ? AM : CY],
+      ['动力', P, CY],
+      ['核心', ship.heat, ship.heat > 0.82 ? '#ff6b5e' : AM],
+      ['跃迁', ship.foldCharge, ship.foldCharge > 0.99 ? '#8affc1' : CY],
+      ['船壳', ship.hull, ship.hull < 0.4 ? '#ff6b5e' : '#8affc1'],
+      ['散热', 0.18 + ship.heat * 0.5, CY],
     ];
     const BW = 15, GAP = 8, BH = 74;
     for (let i = 0; i < bars.length; i++) {
@@ -732,16 +731,16 @@ function drawMain(g, game, ctx) {
     }
     // and the two numbers the columns are of, small, under the labels
     g.line(fl.x, fl.y + BH + 15, fl.x + fl.w, fl.y + BH + 15, DIM, 1, 0.3);
-    g.text('MODE', fl.x + 3, fl.y + BH + 27, { size: 6.5, color: DIM, track: 1.1 });
-    g.text(ship.foldMode ? 'FOLD' : ship.boost > 0.1 ? 'BOOST' : 'CRUISE',
+    g.text('模式', fl.x + 3, fl.y + BH + 27, { size: 6.5, color: DIM, track: 1.1 });
+    g.text(ship.foldMode ? '跃迁' : ship.boost > 0.1 ? '加速' : '巡航',
       fl.x + fl.w - 3, fl.y + BH + 27, { size: 8.5, color: ship.foldMode ? AM : CY, align: 'right' });
-    g.text('ASSIST', fl.x + 3, fl.y + BH + 38, { size: 6.5, color: DIM, track: 1.1 });
-    g.text(ship.assist ? 'ON' : 'OFF', fl.x + fl.w - 3, fl.y + BH + 38,
+    g.text('辅助', fl.x + 3, fl.y + BH + 38, { size: 6.5, color: DIM, track: 1.1 });
+    g.text(ship.assist ? '开' : '关', fl.x + fl.w - 3, fl.y + BH + 38,
       { size: 8.5, color: ship.assist ? '#8affc1' : AM, align: 'right' });
   }
 
   // ---- HULL AND BUS: a plan of the ship with lit zones, and two glyph ranks
-  const hu = g.group(378, AY, 238, AH, 'HULL  ·  BUS  ·  STORES');
+  const hu = g.group(378, AY, 238, AH, '船壳  ·  总线  ·  库存');
   {
     /* The plan-form. Eight zones, each a cell that is lit when that part of the
        ship is intact — which is nearly always, so it reads as a diagram rather
@@ -762,19 +761,19 @@ function drawMain(g, game, ctx) {
     zone(4, 36, 20, 10, 5);
     zone(68, 36, 20, 10, 6);
     zone(38, 50, 16, 9, 7);
-    g.text('AIRFRAME', px, py + ph + 9, { size: 6, color: DIM, track: 1.2 });
+    g.text('机身', px, py + ph + 9, { size: 6, color: DIM, track: 1.2 });
 
     // right of the plan: eight readouts in two columns
     const RX = hu.x + 104, CW = 66;
     const rows = [
-      ['HULL', `${pct(ship.hull)}%`, ship.hull < 0.4 ? '#ff6b5e' : '#8affc1'],
-      ['FOLD', `${pct(ship.foldCharge)}%`, ship.foldCharge > 0.99 ? '#8affc1' : CY],
-      ['CORE', `${(280 + ship.heat * 620).toFixed(0)}K`, ship.heat > 0.82 ? '#ff6b5e' : AM],
-      ['PWR', `${pct(P)}%`, CY],
-      ['SYSTEM', (game.system?.star?.name || '—').toUpperCase().slice(0, 8), VAL],
-      ['BODIES', String(game.system?.bodies?.length ?? 0), CY],
-      ['CATALOG', String(game.discoveries?.size ?? 0), AM],
-      ['RESON', `${game.state?.resonance ?? 0}/7`, AM],
+      ['船壳', `${pct(ship.hull)}%`, ship.hull < 0.4 ? '#ff6b5e' : '#8affc1'],
+      ['跃迁', `${pct(ship.foldCharge)}%`, ship.foldCharge > 0.99 ? '#8affc1' : CY],
+      ['核心', `${(280 + ship.heat * 620).toFixed(0)}K`, ship.heat > 0.82 ? '#ff6b5e' : AM],
+      ['动力', `${pct(P)}%`, CY],
+      ['星系', (game.system?.star?.name || '—').toUpperCase().slice(0, 8), VAL],
+      ['天体', String(game.system?.bodies?.length ?? 0), CY],
+      ['编目', String(game.discoveries?.size ?? 0), AM],
+      ['共鸣', `${game.state?.resonance ?? 0}/7`, AM],
     ];
     for (let i = 0; i < rows.length; i++) {
       kv(rows[i][0], rows[i][1], RX + (i % 2) * CW, hu.y + 2 + Math.floor(i / 2) * 22,
@@ -785,14 +784,14 @@ function drawMain(g, game, ctx) {
        nothing anybody will decode and everything anybody can glance at: this is
        the colour that is not type. */
     const GY = hu.y + hu.h - 6;
-    g.text('BUS', hu.x + 4, GY - 13, { size: 6, color: DIM, track: 1.2 });
+    g.text('总线', hu.x + 4, GY - 13, { size: 6, color: DIM, track: 1.2 });
     g.glyphs(hu.x + 28, GY - 13, 15, [
       ['A', CY, 1], ['B', CY, 1], ['C', CY, on(1)], ['D', '#8affc1', 1],
       ['E', AM, on(2)], ['F', CY, 1], ['G', '#4a6a80', 0], ['H', CY, on(0)],
       ['J', '#8affc1', 1], ['K', AM, on(4)], ['L', CY, 1], ['M', '#4a6a80', 0],
       ['N', CY, on(3)], ['P', '#8affc1', 1],
     ]);
-    g.text('STO', hu.x + 4, GY, { size: 6, color: DIM, track: 1.2 });
+    g.text('库存', hu.x + 4, GY, { size: 6, color: DIM, track: 1.2 });
     g.blocks(hu.x + 28, GY - 7, 208, 7, [
       ['#8affc1', 1], ['#8affc1', on(0)], [CY, on(4)], ['#4a6a80', 0],
       [AM, ship.heat > 0.5], [CY, 1], ['#8affc1', on(2)], ['#4a6a80', 0],
@@ -814,7 +813,7 @@ function drawMain(g, game, ctx) {
   // ---- ACTION and VELOCITY. The one line on this panel meant to be read from
   //      across the cockpit, and the two numbers you steer by underneath it.
   const act = nextAction(game);
-  const ag = g.group(4, BY, 370, BH, 'ACTION  ·  VELOCITY', { accent: act.hot ? AM : CY });
+  const ag = g.group(4, BY, 370, BH, '行动  ·  速度', { accent: act.hot ? AM : CY });
   g.fill(ag.x, ag.y + 1, ag.w, 28, act.hot ? 'rgba(255,170,110,0.13)' : 'rgba(143,228,255,0.07)');
   g.fill(ag.x, ag.y + 1, 3, 28, act.hot ? AM : CY);
   g.text(act.line, ag.x + 12, ag.y + 21,
@@ -832,7 +831,7 @@ function drawMain(g, game, ctx) {
       { size: 7, color: DIM, track: 1.2 });
     const sf = Math.min(1, ship.speed / (ship.maxSpeed * ship.boostMul));
     g.meter(ag.x + 2, vy + 23, 168, 6, sf, { color: ship.boost > 0.1 ? AM : CY, ticks: 8 });
-    g.text('THR', ag.x + 186, vy + 6, { size: 6.5, color: DIM, track: 1.2 });
+    g.text('油门', ag.x + 186, vy + 6, { size: 6.5, color: DIM, track: 1.2 });
     g.meter(ag.x + 212, vy, 152, 6, ship.throttle,
       { color: ship.boost > 0.1 ? AM : CY, ticks: 4 });
     /* Drift: the angle between where the nose points and where the ship is
@@ -845,18 +844,18 @@ function drawMain(g, game, ctx) {
       ? Math.acos(Math.max(-1, Math.min(1,
         _v0.copy(ship.vel).divideScalar(sp).dot(fw)))) * 57.2958
       : 0;
-    g.text('DRIFT', ag.x + 186, vy + 20, { size: 6.5, color: DIM, track: 1.2 });
+    g.text('漂移', ag.x + 186, vy + 20, { size: 6.5, color: DIM, track: 1.2 });
     g.meter(ag.x + 212, vy + 14, 152, 6, drift / 90,
       { color: drift > 25 ? AM : CY, ticks: 4 });
-    g.text(`SCAN ${game.scanProgress > 0.001 ? `${pct(game.scanProgress)}%` : 'IDLE'}`
-      + `   AP ${game.autopilot ? 'ENGAGED' : 'STBY'}`
-      + `   ASSIST ${ship.assist ? 'ON' : 'OFF'}`
-      + `   LOAD ${Math.round(P * 100)}%   BUS ${(P * 118).toFixed(0)}V`,
+    g.text(`扫描 ${game.scanProgress > 0.001 ? `${pct(game.scanProgress)}%` : '待机'}`
+      + `   自动驾驶 ${game.autopilot ? '已启用' : '待命'}`
+      + `   辅助 ${ship.assist ? '开' : '关'}`
+      + `   负载 ${Math.round(P * 100)}%   总线 ${(P * 118).toFixed(0)}V`,
       ag.x + 2, vy + 40, { size: 6.5, color: DIM, track: 0.7 });
   }
 
   // ---- CONTACTS, and under them the machine talking to itself
-  const cg = g.group(378, BY, 238, BH, 'CONTACTS  ·  PASSIVE');
+  const cg = g.group(378, BY, 238, BH, '接触  ·  被动');
   {
     const near = (game.bodies || [])
       .filter((b) => b !== ship)
@@ -880,11 +879,11 @@ function drawMain(g, game, ctx) {
        be on a panel is a machine narrating itself to nobody in particular. */
     const tick = Math.floor((ctx.time || 0) * 0.7);
     const log = [
-      ['NAV', 'EPHEMERIS SYNC OK'],
-      ['PWR', `BUS ${(P * 118).toFixed(0)}V NOMINAL`],
-      ['SCN', game.scanProgress > 0.001 ? 'ACQUIRING' : 'ARRAY IDLE'],
-      ['FLD', ship.foldCharge > 0.99 ? 'COIL CHARGED' : `COIL ${pct(ship.foldCharge)}%`],
-      ['THM', `RAD ${(280 + ship.heat * 620).toFixed(0)}K`],
+      ['导航', '星历同步正常'],
+      ['电源', `总线 ${(P * 118).toFixed(0)}V 正常`],
+      ['扫描', game.scanProgress > 0.001 ? '采集中' : '阵列待机'],
+      ['跃迁', ship.foldCharge > 0.99 ? '线圈已充满' : `线圈 ${pct(ship.foldCharge)}%`],
+      ['热', `辐射 ${(280 + ship.heat * 620).toFixed(0)}K`],
     ];
     for (let i = 0; i < 3; i++) {
       const row = log[(tick + i) % log.length];
@@ -905,7 +904,7 @@ function drawMain(g, game, ctx) {
      along its bottom sixth. */
   {
     const KY = 262, KN = 8, KW = (w - 8 - (KN - 1) * 3) / KN;
-    const page = ['NAV', 'SYS', 'CON', 'SCN', 'FLD', 'MAP', 'CFG', 'DIM'];
+    const page = ['导航', '系统', '联络', '扫描', '跃迁', '星图', '配置', '亮度'];
     const live = [0, 3, 4];
     for (let i = 0; i < KN; i++) {
       const kx = 4 + i * (KW + 3);
@@ -928,13 +927,13 @@ function drawMain(g, game, ctx) {
 function drawSystems(g, game, ctx) {
   const { w } = g;
   const ship = game.ship;
-  g.header('SYSTEMS', 16, 28, w - 32);
+  g.header('系统', 16, 28, w - 32);
 
   const rows = [
-    ['HULL', ship.hull, '#8affc1'],
-    ['FOLD CHARGE', ship.foldCharge, CY],
-    ['CORE TEMP', ship.heat, ship.heat > 0.82 ? '#ff6b5e' : AM],
-    ['SCANNER', 1, CY],
+    ['船壳', ship.hull, '#8affc1'],
+    ['跃迁充能', ship.foldCharge, CY],
+    ['核心温度', ship.heat, ship.heat > 0.82 ? '#ff6b5e' : AM],
+    ['扫描仪', 1, CY],
   ];
   let y = 62;
   for (const [label, v, col] of rows) {
@@ -945,17 +944,17 @@ function drawSystems(g, game, ctx) {
   }
 
   g.line(16, y - 6, w - 16, y - 6, DIM, 1, 0.3);
-  g.text('SYSTEM', 16, y + 20, { size: 12, color: DIM, track: 2 });
+  g.text('星系', 16, y + 20, { size: 12, color: DIM, track: 2 });
   g.text(game.system.star.name.toUpperCase(), w - 16, y + 20, { size: 14, color: VAL, align: 'right' });
-  g.text('CATALOGUED', 16, y + 44, { size: 12, color: DIM, track: 2 });
+  g.text('已编目', 16, y + 44, { size: 12, color: DIM, track: 2 });
   g.text(String(game.discoveries.size), w - 16, y + 44, { size: 14, color: AM, align: 'right' });
-  g.text('RESONANCE', 16, y + 68, { size: 12, color: DIM, track: 2 });
+  g.text('共鸣', 16, y + 68, { size: 12, color: DIM, track: 2 });
   g.text(`${game.state.resonance} / 7`, w - 16, y + 68, { size: 14, color: AM, align: 'right' });
 }
 
 function drawContacts(g, game, ctx) {
   const { w, h } = g;
-  g.header('CONTACTS', 16, 28, w - 32);
+  g.header('接触', 16, 28, w - 32);
   const ship = game.ship;
   const list = game.bodies.slice()
     .sort((a, b) => a.absPos.distanceToSquared(ship.absPos) - b.absPos.distanceToSquared(ship.absPos))
@@ -972,7 +971,7 @@ function drawContacts(g, game, ctx) {
     y += 24;
   }
   g.line(16, h - 40, w - 16, h - 40, DIM, 1, 0.3);
-  g.text(`${game.anomalies.filter((a) => !a.scanned).length} UNRESOLVED SIGNALS`, 16, h - 18,
+  g.text(`${game.anomalies.filter((a) => !a.scanned).length} 个未解信号`, 16, h - 18,
     { size: 12, color: AM, track: 1.6 });
 }
 
@@ -989,10 +988,10 @@ function drawLower(g, game, ctx) {
   const { w, h } = g;
   const ship = game.ship;
   const cells = [
-    ['PWR', ship.throttle, ship.boost > 0.1 ? AM : CY],
-    ['FOLD', ship.foldCharge, CY],
-    ['HULL', ship.hull, ship.hull < 0.4 ? '#ff6b5e' : '#8affc1'],
-    ['TEMP', ship.heat, ship.heat > 0.82 ? '#ff6b5e' : AM],
+    ['动力', ship.throttle, ship.boost > 0.1 ? AM : CY],
+    ['跃迁', ship.foldCharge, CY],
+    ['船壳', ship.hull, ship.hull < 0.4 ? '#ff6b5e' : '#8affc1'],
+    ['温度', ship.heat, ship.heat > 0.82 ? '#ff6b5e' : AM],
   ];
   const pad = 14, gap = 10;
   const cw = (w - pad * 2 - gap * 3) / 4;
@@ -1010,21 +1009,21 @@ function drawLower(g, game, ctx) {
 
 function drawRadarLabel(g, game, ctx) {
   const { w } = g;
-  g.text('TACTICAL', w / 2, 34, { size: 16, color: DIM, align: 'center', track: 5 });
-  g.text(`RANGE ${fmtDist(ctx.radarRange)}`, w / 2, 62, { size: 15, color: CY, align: 'center', track: 2 });
+  g.text('战术', w / 2, 34, { size: 16, color: DIM, align: 'center', track: 5 });
+  g.text(`范围 ${fmtDist(ctx.radarRange)}`, w / 2, 62, { size: 15, color: CY, align: 'center', track: 2 });
 }
 
 function drawArchiveIdle(g, game, ctx) {
   const { w, h } = g;
-  g.header('INSTITUTE ARCHIVE', 22, 40, w - 44);
-  g.text('THE LONG SILENCE', 22, 108, { size: 34, color: VAL, track: 4 });
-  g.text('COMMISSION 1101 · PALE SEEKER', 22, 138, { size: 15, color: AM, track: 2.4 });
+  g.header('研究院档案', 22, 40, w - 44);
+  g.text('漫长沉默', 22, 108, { size: 34, color: VAL, track: 4 });
+  g.text('第 1101 次委任 · 苍白探寻者', 22, 138, { size: 15, color: AM, track: 2.4 });
 
   const rows = [
-    ['SYSTEMS CHARTED', `${game.galaxy.filter((s) => s.visited).length} / ${game.galaxy.length}`],
-    ['BODIES CATALOGUED', String(game.discoveries.size)],
-    ['RECORDS RECOVERED', String(game.logsFound.size)],
-    ['CANTOS ATTUNED', `${game.state.resonance} / 7`],
+    ['已测绘星系', `${game.galaxy.filter((s) => s.visited).length} / ${game.galaxy.length}`],
+    ['已编目天体', String(game.discoveries.size)],
+    ['已回收记录', String(game.logsFound.size)],
+    ['已调谐圣歌', `${game.state.resonance} / 7`],
   ];
   let y = 196;
   for (const [k, v] of rows) {
@@ -1033,5 +1032,5 @@ function drawArchiveIdle(g, game, ctx) {
     g.line(22, y + 10, w - 22, y + 10, DIM, 1, 0.25);
     y += 42;
   }
-  g.text('PRESS  E  TO OPEN', w / 2, h - 26, { size: 15, color: AM, align: 'center', track: 4 });
+  g.text('按  E  打开', w / 2, h - 26, { size: 15, color: AM, align: 'center', track: 4 });
 }

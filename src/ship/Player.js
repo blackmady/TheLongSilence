@@ -1,12 +1,11 @@
 import * as THREE from 'three';
 
 /* ============================================================================
-   First-person crew controller, working in interior metres.
+   第一人称乘员控制器，以舱内米为单位工作。
 
-   Collision is deliberately not a physics engine: the module is a corridor of
-   known width, so the walkable region is a half-width function of Z plus a
-   handful of blocker rectangles. Moving each axis separately means you slide
-   along a bulkhead instead of sticking to it.
+   碰撞有意不用物理引擎：本模块是一条已知宽度的走廊，因此可行走区域是
+   Z 的半宽函数加上少量阻挡矩形。逐轴移动意味着你会沿着舱壁滑行，
+   而不是粘在上面。
    ========================================================================== */
 
 const EYE = 1.66;          // eye height, metres

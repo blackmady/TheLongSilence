@@ -1,4 +1,4 @@
-/* Land and lift off for real, through the cutscenes, recording frame times. */
+/* 真实地降落与起飞，穿过过场动画，记录帧时间。 */
 import { chromium } from 'playwright';
 import { mkdirSync } from 'fs';
 import { bootGame } from '../boot.mjs';

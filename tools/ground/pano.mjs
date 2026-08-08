@@ -1,4 +1,4 @@
-/* Scratch: land, pin the sun, and shoot a panorama from one spot on foot.
+/* 草稿：降落，钉住太阳，从步行中的一个点拍摄全景。
    node tools/ground/pano.mjs --out /tmp/pano/base --world terran --elev 0.34 --n 6 */
 import { chromium } from 'playwright';
 import { mkdirSync } from 'fs';

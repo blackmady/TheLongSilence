@@ -220,7 +220,7 @@ export class Game {
 
   async boot() {
     const P = this.onProgress;
-    P(0.05, 'seeding the expanse');
+    P(0.05, '播种广袤空间');
     this.galaxySeed = 20260725;
     this.galaxy = generateGalaxy(this.galaxySeed, 14);
 
@@ -231,14 +231,14 @@ export class Game {
     this.resonatorSystems = new Set([0, ...ids.filter((i) => i !== 0).slice(0, RESONATOR_COUNT - 1)]);
 
     await frame();
-    P(0.18, 'painting the deep field');
+    P(0.18, '绘制深空星野');
     this.skyRes = this.quality === 'low' ? 256 : this.quality === 'medium' ? 512 : 1024;
     this.nebula = bakeNebulaCube(this.renderer, this.skyRes, 7.31, this.galaxy[0].nebula);
     this.scene.background = this.nebula.texture;
     this.scene.backgroundIntensity = 1.0;
 
     await frame();
-    P(0.34, 'resolving the environment');
+    P(0.34, '解析环境');
     this.pmrem = new THREE.PMREMGenerator(this.renderer);
     this.pmrem.compileCubemapShader();
     this.envRT = this.pmrem.fromCubemap(this.nebula.texture);
@@ -246,12 +246,12 @@ export class Game {
     this.scene.environmentIntensity = 0.9;
 
     await frame();
-    P(0.46, 'hanging the stars');
+    P(0.46, '悬挂星辰');
     this.starField = makeStarField(this.quality === 'low' ? 5000 : 14000, 3.7);
     this.scene.add(this.starField);
 
     await frame();
-    P(0.58, 'assembling PALE SEEKER');
+    P(0.58, '组装 苍白探寻者');
     this.ship = new Ship();
     this.scene.add(this.ship.object);
 
@@ -380,7 +380,7 @@ export class Game {
     this.scene.add(this.bounceLight.target);
 
     await frame();
-    P(0.70, 'charting the first system');
+    P(0.70, '测绘首个星系');
     this.hud = new HUD(this);
     this.codex = new Codex(this);
     // Cartography is an object in the room now, not a window over it. The
@@ -394,7 +394,7 @@ export class Game {
 
     await this.loadSystem(0, true);
 
-    P(0.92, 'warming shaders');
+    P(0.92, '预热着色器');
     await frame();
     this.renderer.compile(this.scene, this.camera);
     await frame();
@@ -537,10 +537,9 @@ export class Game {
     // ---- anomalies
     this._placeAnomalies(sys, stub);
 
-    // ---- orbital infrastructure
-    // One station per inhabited world, plus one working a belt. They are hung
-    // close in — 1.4 radii — because a station only does its job when it is in
-    // the same frame as the planet it orbits.
+    // ---- 轨道基础设施
+    // 每个有人居住的世界一座空间站，外加一座在带区工作。它们悬挂得很近——
+    // 1.4 倍半径——因为空间站只有与它所绕行的行星同框时才算尽职。
     this.stations = [];
     {
       const srnd = mulberry32((stub.seed ^ 0x513a) >>> 0);
@@ -556,15 +555,15 @@ export class Game {
           built, obj: built.root, hostSpec: host,
           offset: new THREE.Vector3(Math.cos(ang) * rad, (srnd() - 0.5) * rad * 0.35, Math.sin(ang) * rad),
           absPos: new THREE.Vector3(),
-          name: `${stub.name} ${['GATE', 'ANCHORAGE', 'YARDS'][si % 3]}`,
+          name: `${stub.name} ${['星门', '锚地', '船坞'][si % 3]}`,
         });
         si++;
       }
     }
 
-    // ---- traffic
-    // Built after the bodies are in place, because every flight plan is keyed
-    // to real positions: lanes run between worlds that are actually there.
+    // ---- 交通
+    // 在天体就位之后建造，因为每条飞行计划都锚定真实位置：
+    // 航线穿梭于真实存在的世界之间。
     this._positionSystem(0);
     this.fleet = new Fleet(sys, this.bodies, this.quality);
     this.scene.add(this.fleet.object);
@@ -597,7 +596,7 @@ export class Game {
     this.cockpit?.rebuildNav(sys);
     this.encounters?.onSystemChange();
     this.hud.onSystemChange();
-    if (!initial) this.hud.log(`ARRIVED · ${stub.name}`, 'hi');
+    if (!initial) this.hud.log(`已抵达 · ${stub.name}`, 'hi');
   }
 
   _placeAnomalies(sys, stub) {
@@ -625,7 +624,7 @@ export class Game {
       if (a.type === 'resonator') {
         obj = buildResonator(stub.seed + idx, this.nebula.texture);
         scale = 1.0;
-        name = `RESONATOR ${romanize(this.resonatorIndexFor(stub.id))}`;
+        name = `共鸣器 ${romanize(this.resonatorIndexFor(stub.id))}`;
       } else if (a.type === 'derelict') {
         obj = buildDerelict(stub.seed + idx * 31, this.nebula.texture);
         scale = 2.6;
@@ -1072,7 +1071,7 @@ export class Game {
     this.mode = 'exterior';
     this.ship.throttle = 0.55;
     this.ship.deployGear(true);
-    this.hud.log(`DESCENT · ${b.name}`, 'ok');
+    this.hud.log(`降落 · ${b.name}`, 'ok');
     this.audio.ping('boot');
 
     const seq = SEQUENCES.descent(this, b);
@@ -1220,7 +1219,7 @@ export class Game {
        is a landscape behind it. */
     this._cloudOut = this._cloud;
     this.ship.model.visible = true;
-    this.hud.log(`TOUCHDOWN · ${b.name}`, 'ok');
+    this.hud.log(`着陆 · ${b.name}`, 'ok');
 
     const seq = SEQUENCES.touchdown(this, b);
     this.director.play('land:' + b.id, seq.shots, { title: seq.title, sub: seq.sub });
@@ -1371,7 +1370,7 @@ export class Game {
       ? this.surface.heightAt(x, z, 1.0) : 0);
     p.groundY = p.groundHeight(p.pos.x, p.pos.z);
     this.interiorRig.visible = false;
-    this.hud.log('EVA · SUIT SEALED', 'ok');
+    this.hud.log('舱外作业 · 宇航服已密封', 'ok');
     this.audio.ping('ui');
   }
 
@@ -1403,7 +1402,7 @@ export class Game {
     if (!this.landed || !this.landed.onFoot) return;
     const R = this.ship.length * 1000;
     if (Math.hypot(this.player.pos.x, this.player.pos.z) > R * 1.15) {
-      this.hud.log('TOO FAR FROM THE SHIP', 'hi');
+      this.hud.log('离船太远', 'hi');
       this.audio.ping('deny');
       return;
     }
@@ -1450,7 +1449,7 @@ export class Game {
     this.transition = { kind: 'ascent', body: b, site: up, t: 0, flared: false, hideHull: false };
     this.ship.deployGear(false);
     this.ship.throttle = 0.6;
-    this.hud.log('LIFTOFF', 'ok');
+    this.hud.log('起飞', 'ok');
     this.audio.ping('boot');
 
     const seq = SEQUENCES.ascent(this, b);
@@ -1926,7 +1925,7 @@ export class Game {
     if (!u || this.upgrades.includes(id)) return;
     this.upgrades.push(id);
     u.apply(this);
-    this.hud.log(`SYSTEM UPGRADED · ${u.label}`, 'ok');
+    this.hud.log(`系统升级 · ${u.label}`, 'ok');
     this.audio.ping('objective');
   }
 
@@ -1934,7 +1933,7 @@ export class Game {
   revealResonator() {
     this.resonatorRevealed = true;
     const r = this.anomalies.find((a) => a.anomalyType === 'resonator');
-    if (r) { this.target = r; this.hud.log(`RESONANCE BEARING · ${r.name}`, 'hi'); }
+    if (r) { this.target = r; this.hud.log(`共鸣方位 · ${r.name}`, 'hi'); }
   }
 
   /** Light one socket in the chamber per Canto held. */
@@ -2277,8 +2276,8 @@ export class Game {
       radarRange: THREE.MathUtils.clamp(nearInfo.surfaceDist * 4.5, 60, 4.0e6),
       navActive: this.mode !== 'exterior',
       warn: this.proximityWarn
-        || (ship.hull < 0.4 ? 'HULL INTEGRITY' : null)
-        || (ship.heat > 0.9 ? 'CORE OVERHEAT' : null),
+        || (ship.hull < 0.4 ? '船壳完整性' : null)
+        || (ship.heat > 0.9 ? '核心过热' : null),
     });
 
     this.updateChamber(dt);
@@ -2606,16 +2605,16 @@ export class Game {
     if (this.landed) {
       // On the ground the two views are the crane and the pilot's own eyes;
       // stepping out and climbing back in is E, and this must not fight it.
-      this.hud.log(this.landed.onFoot ? 'E · BOARD' : 'E · STEP OUT');
+      this.hud.log(this.landed.onFoot ? 'E · 登船' : 'E · 出舱');
       return;
     }
     if (this.mode === 'exterior') {
       this.mode = this.player.mode === 'seated' || this.player.mode === 'moving'
         ? 'pilot' : 'walk';
-      this.hud.log('VIEW · INTERNAL');
+      this.hud.log('视角 · 舱内');
     } else {
       this.mode = 'exterior';
-      this.hud.log('VIEW · EXTERNAL');
+      this.hud.log('视角 · 舱外');
     }
     this.audio.ping('ui');
   }
@@ -2626,7 +2625,7 @@ export class Game {
     if (this.mode === 'pilot') {
       this.player.stand();
       this.audio.ping('switch');
-      this.hud.log('HELM RELEASED');
+      this.hud.log('已离开驾驶席');
       return;
     }
     const st = this.player.station;
@@ -2639,16 +2638,16 @@ export class Game {
         // panels wake in sequence, centre first — a deliberate power-on
         Object.values(this.cockpit.screens).forEach((sc, i) => sc.boot(0.12 + i * 0.09));
         setTimeout(() => this.audio.ping('boot'), 220);
-        this.hud.log('HELM ENGAGED', 'ok');
+        this.hud.log('已就座驾驶席', 'ok');
         break;
       case 'nav': this.starmap.show(); break;
       case 'archive': this.codex.show(); break;
       case 'resonance':
         this.chamberVisits++;
         if (this.cantos.length) { this.codex.show('canto:' + this.cantos[this.cantos.length - 1]); }
-        else this.hud.narrate('Seven sockets. All of them empty, all of them warm.', 'PALE SEEKER');
+        else this.hud.narrate('七个插槽。全都空着，全都温热。', '苍白探寻者');
         break;
-      case 'port': this.hud.narrate(this.portLine(), 'OBSERVATION'); break;
+      case 'port': this.hud.narrate(this.portLine(), '观测舷窗'); break;
       default: break;
     }
   }
@@ -2656,8 +2655,8 @@ export class Game {
   portLine() {
     const t = this.bodies.slice().sort((a, b) =>
       a.absPos.distanceTo(this.ship.absPos) - b.absPos.distanceTo(this.ship.absPos))[0];
-    return t ? `${t.name} fills the port. ${t.scanned ? 'Catalogued.' : 'Unsurveyed.'}`
-      : 'Only the deep field, and the long silence in it.';
+    return t ? `${t.name} 占满了舷窗。${t.scanned ? '已编目。' : '尚未勘测。'}`
+      : '只有深邃的深空，以及其中的漫长沉默。';
   }
 
   /* -------------------------------------------------------- autopilot */
@@ -2665,16 +2664,16 @@ export class Game {
   toggleAutopilot() {
     if (this.autopilot) { this.cancelAutopilot(); return; }
     const t = this.target;
-    if (!t) { this.hud.log('NO TARGET SELECTED', 'hi'); return; }
+    if (!t) { this.hud.log('未选择目标', 'hi'); return; }
     this.autopilot = { body: t, phase: 'align' };
-    this.hud.log(`AUTOPILOT · ${t.name}`, 'ok');
+    this.hud.log(`自动驾驶 · ${t.name}`, 'ok');
     this.audio.ping('ui');
   }
 
   cancelAutopilot(quiet) {
     if (!this.autopilot) return;
     this.autopilot = null;
-    if (!quiet) this.hud.log('AUTOPILOT DISENGAGED');
+    if (!quiet) this.hud.log('自动驾驶已解除');
   }
 
   /** Approach distance that frames a body nicely rather than crashing into it. */
@@ -2716,7 +2715,7 @@ export class Game {
       ship.throttle = 0;
       ship.vel.multiplyScalar(Math.max(0, 1 - dt * 2.2));
       if (ship.speed < 4) {
-        this.hud.log(`ARRIVED · ${ap.body.name}`, 'ok');
+        this.hud.log(`已抵达 · ${ap.body.name}`, 'ok');
         this.audio.ping('arrive');
         this.cancelAutopilot(true);
       }
@@ -2753,7 +2752,7 @@ export class Game {
       _v.multiplyScalar(1 / Math.max(d, 1e-6));
 
       const t = THREE.MathUtils.clamp((soft - d) / (soft - floor), 0, 1);
-      this.proximityWarn = isStar ? 'STELLAR PROXIMITY' : 'TERRAIN PROXIMITY';
+      this.proximityWarn = isStar ? '恒星接近' : '地表接近';
 
       // cancel automation and cut the drive as the envelope closes
       if (t > 0.25) { this.cancelAutopilot(true); if (ship.foldMode) this.toggleFold(false); }
@@ -2810,7 +2809,7 @@ export class Game {
       a.absPos.distanceTo(this.ship.absPos) - b.absPos.distanceTo(this.ship.absPos));
     const i = list.indexOf(this.target);
     this.target = list[(i + 1) % list.length];
-    this.hud.log(`TARGET · ${this.target.name}`);
+    this.hud.log(`目标 · ${this.target.name}`);
   }
 
   scanRangeFor(b) {
@@ -2859,8 +2858,8 @@ export class Game {
         this.state.resonance = this.cantos.length;
         const seq = SEQUENCES.attune(this, b);
         this.director.play('attune:' + b.id, seq.shots, { title: seq.title, sub: seq.sub });
-        this.hud.narrate(CANTOS[idx].q, 'RESONATOR');
-        this.hud.log(`ATTUNED · ${CANTOS[idx].title}`, 'hi');
+        this.hud.narrate(CANTOS[idx].q, '共鸣器');
+        this.hud.log(`已调谐 · ${CANTOS[idx].title}`, 'hi');
         this.audio.ping('resonate');
         this.ship.maxSpeed *= 1.09;
         this.ship.foldCharge = 1;
@@ -2868,17 +2867,17 @@ export class Game {
       }
     } else if (b.kind === 'anomaly' && b.logId) {
       this.logsFound.add(b.logId);
-      this.hud.log(`LOG RECOVERED · ${b.name}`, 'ok');
+      this.hud.log(`已回收日志 · ${b.name}`, 'ok');
     } else {
-      this.hud.log(`SCANNED · ${b.name}`, 'ok');
+      this.hud.log(`已扫描 · ${b.name}`, 'ok');
     }
     this.hud.refreshTargets();
     this.codex.markDirty();
   }
 
   onAperture() {
-    this.hud.narrate('The Aperture is open. It has always been open.', 'THE CHOIR');
-    this.hud.log('APERTURE RESONANCE ACHIEVED', 'hi');
+    this.hud.narrate('孔洞敞开着。它一直都在敞开着。', '合唱团');
+    this.hud.log('已达成孔洞共鸣', 'hi');
   }
 
   /* ------------------------------------------------------------ fold drive */
@@ -2903,11 +2902,11 @@ export class Game {
     if (want) {
       const near = this.nearestBodyInfo();
       if (near.surfaceDist < this.foldFloor(near)) {
-        this.hud.log(`FOLD BLOCKED · TOO DEEP IN ${(near.body?.name || 'MASS').toUpperCase()}`, 'hi');
+        this.hud.log(`跃迁受阻 · 太深入 ${(near.body?.name || '质量场')}`, 'hi');
         this.audio.ping('deny');
         return;
       }
-      if (ship.foldCharge < 0.12) { this.hud.log('FOLD CHARGE INSUFFICIENT', 'hi'); return; }
+      if (ship.foldCharge < 0.12) { this.hud.log('跃迁充能不足', 'hi'); return; }
       ship.foldMode = true;
       ship.throttle = 1;
       this.hud.setFold(true);
@@ -3107,7 +3106,7 @@ export class Game {
       el: THREE.MathUtils.degToRad(o.el ?? 16),
       fov: o.fov ?? 42,
     };
-    return this.inspectMode.ref ? this.inspectMode.ref.name : 'PALE SEEKER';
+    return this.inspectMode.ref ? this.inspectMode.ref.name : '苍白探寻者';
   }
 
   /** Verification aid: toggle individual render layers on/off. */

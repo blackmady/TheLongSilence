@@ -1,9 +1,8 @@
-// Objective tone measurement for a set of frames.
+// 一组画面的客观色调测量。
 //
-// "It looks flat" is not actionable; "0.00% of pixels clip and the 99th
-// percentile is 123" is. This reports, per shot: mean, the 1st/50th/99th
-// percentile, the fraction of pixels that reach display white, and the
-// fraction crushed to black — the two numbers that decide whether an image
+// “看起来平”不是可执行的反馈；“0.00% 的像素溢出、99 百分位是 123”才是。
+// 本脚本按镜头报告：均值、1/50/99 百分位、达到显示白光的像素比例、
+// 以及被压到纯黑的像素比例——这两个数字决定一张图像
 // has range or sits in a fog band.
 //
 //   node tools/levels.mjs shots/judge/*.png

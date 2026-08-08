@@ -1,4 +1,4 @@
-// Ad-hoc probe: boot the game, run JS, optionally screenshot.
+// 即席探针：启动游戏，运行 JS，可选截图。
 //   node tools/probe.mjs "expr" [--shot path] [--settle ms] [--w 1600] [--h 900]
 import { chromium } from 'playwright';
 import { bootGame } from './boot.mjs';

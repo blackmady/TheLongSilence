@@ -1,5 +1,5 @@
-// Interaction test: drives the real input path (keys, mouse, clicks) and
-// asserts that flight, scanning, fold drive and system jump actually work.
+// 交互测试：驱动真实的输入路径（键盘、鼠标、点击），
+// 并断言飞行、扫描、跃迁引擎与星系跳跃确实工作。
 import { chromium } from 'playwright';
 import { bootGame } from './boot.mjs';
 import fs from 'node:fs';
@@ -33,9 +33,9 @@ await bootGame(page);
 
 const G = (fn) => page.evaluate(fn);
 
-// ---------------------------------------------------------- take the helm
-// The game now starts on foot in the habitat, so every flight assertion has to
-// be preceded by actually walking to the seat and sitting in it.
+// ---------------------------------------------------------- 接管驾驶席
+// 游戏现在从生活区的步行状态开始，因此每条飞行断言之前
+// 都必须真正走到座椅前并坐进去。
 check('starts on foot in the cabin', await G(() => window.__game.mode === 'walk'));
 await G(() => {
   const g = window.__game;

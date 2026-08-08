@@ -1,5 +1,5 @@
-// Touch-control test: drives the virtual sticks and buttons with real touch
-// events and asserts the flight model responds.
+// 触屏操作测试：用真实触摸事件驱动虚拟摇杆与按钮，
+// 并断言飞行模型有响应。
 import { chromium } from 'playwright';
 const browser = await chromium.launch({ headless: false,
   args: ['--use-angle=metal', '--enable-gpu', '--ignore-gpu-blocklist', '--hide-scrollbars'] });

@@ -1,9 +1,8 @@
-// Capture the social-embed art straight out of the running game.
+// 直接从运行中的游戏捕获社交分享图。
 //
-// The whole game is procedural, so there is no art to ship as a file — the
-// honest splash image is a real frame. This boots the game, parks the ship at
-// the helm looking at a world, hides the screen-space overlay so nothing
-// transient ends up baked into a permanent image, and shoots at OG size.
+// 整个游戏都是程序生成的，因此没有可以以文件形式交付的美术——诚实的
+// 启动画面就是真实的一帧。本脚本启动游戏，把飞船停在驾驶席前望向一颗
+// 星球，隐藏屏幕空间覆盖层以免任何瞬态被烘焙进永久图片，然后以 OG 尺寸拍摄。
 //
 //   node tools/splash.mjs [--w 1200] [--h 630] [--out public/og.png]
 import { chromium } from 'playwright';

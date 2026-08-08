@@ -1,11 +1,9 @@
-/* Pinned wall clock for the landed scene, at the worst pose of the crane orbit.
+/* 落地场景的钉住墙钟，取吊臂轨道的 worst 姿态。
  *
- * "The landed scene runs at N fps" is meaningless on its own: the frame swings
- * 18.2 to 13.2 ms across the orbit, and `landed.t` drives both the sun and the
- * camera, so an unpinned run measures a different pose every time. This walks
- * the orbit with the clock held at each stop, samples rAF intervals in ~1.1 s
- * windows, takes the median inside a window and the minimum across ten, and
- * quotes the worst stop.
+ * “落地场景以 N fps 运行”本身毫无意义：帧在轨道上从 18.2 摆动到 13.2 ms，
+ * 而 `landed.t` 同时驱动太阳与相机，因此未钉住的运行每次测量的是不同姿态。
+ * 本脚本在每个停点钉住时钟走完轨道，在 ~1.1 s 窗口内采样 rAF 间隔，
+ * 取窗口内中位数与十个窗口的最小值，并引用最差的停点。
  *
  * Dynamic resolution is pinned and `adapt` stubbed, vsync is off, and the
  * comparison is only meaningful against another run on the same machine at the

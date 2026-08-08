@@ -1,4 +1,4 @@
-// Frame the deployed cartography hologram.
+// 为展开的制图全息图取景。
 //   node tools/mapshot.mjs [out.png]
 import { chromium } from 'playwright';
 const OUT = process.argv[2] || 'shots/holomap.png';

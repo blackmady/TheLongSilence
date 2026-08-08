@@ -1,7 +1,7 @@
 {
-  "name": "THE LONG SILENCE",
-  "short_name": "Long Silence",
-  "description": "Explore a procedurally generated galaxy from the cockpit of the deep survey vessel PALE SEEKER.",
+  "name": "漫长沉默",
+  "short_name": "漫长沉默",
+  "description": "从深空勘测船“苍白探寻者”的驾驶舱出发，探索一个程序生成的星系。",
   "start_url": "/",
   "display": "fullscreen",
   "orientation": "any",

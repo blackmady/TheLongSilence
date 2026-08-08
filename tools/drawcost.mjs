@@ -1,4 +1,4 @@
-// Is the frame bound by fill rate or by draw submission?
+// 帧是被填充率还是绘制提交束缚？
 //   node tools/drawcost.mjs [url] [--webkit]
 import { chromium, webkit } from 'playwright';
 const args = process.argv.slice(2);

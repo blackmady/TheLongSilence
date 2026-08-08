@@ -2605,7 +2605,7 @@ export function buildStation(seed, o = {}) {
        on a plane facing out of the *mouth*, i.e. floating in mid-air across the
        opening, back to front, which is exactly how it looked. */
     for (const s of [1, -1]) {
-      const tg = stencil('BAY ' + REG, 15, 0.7);
+      const tg = stencil('舱位 ' + REG, 15, 0.7);
       D.push(...tg.geo.map((gg) => place(gg, {
         rot: [0, s > 0 ? 0 : Math.PI, 0],
         pos: [BX - s * tg.width / 2 + s * 6, BY - 13, BZ + s * (IZ + t * 2 + 3)],

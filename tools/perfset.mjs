@@ -1,6 +1,6 @@
-// Frame rate across the set-pieces that actually cost something, at the real
-// display resolution. One browser, one boot, several poses — so a slow scene
-// cannot hide behind a fast one, and shader compilation is paid once.
+// 在真实显示分辨率下，横跨那些真正有成本的定式场景的帧率。
+// 一个浏览器、一次启动、多个姿态——慢场景无法躲在快场景后面，
+// 着色器编译也只付出一次。
 //
 //   node tools/perfset.mjs [--dpr 2] [--w 1512] [--h 945] [--hold 6]
 import { chromium } from 'playwright';

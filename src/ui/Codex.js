@@ -1,7 +1,7 @@
 import { CANTOS, LOGS, TYPE_INFO, STAR_INFO, ANOMALY_INFO } from '../game/lore.js';
 import { fmtDist } from './HUD.js';
 
-/* The archive: everything you have scanned, plus everything the Choir left. */
+/* 档案：你扫描到的一切，加上合唱团留下的一切。 */
 
 export class Codex {
   constructor(game) {
@@ -26,8 +26,7 @@ export class Codex {
     this.render();
   }
 
-  /* Held in the DOM for the length of the fade-out. Snapping it away was the
-     one place the UI cut rather than moved, and it showed. */
+  /* 淡出期间保留在 DOM 中。收起动画是 UI 唯一一处“切”而非“移动”的地方，而且肉眼可见。 */
   close() {
     if (!this.open) return;
     this.open = false;
@@ -39,7 +38,7 @@ export class Codex {
     }, 220);
   }
 
-  /** Off now, with no transition — for scene set-ups that teleport. */
+  /** 立即隐藏，无过渡——用于需要瞬移的场景布置。 */
   hide() {
     this.open = false;
     clearTimeout(this._closeT);
@@ -53,19 +52,19 @@ export class Codex {
 
     const groups = [
       {
-        title: 'SURVEY', items: [
-          { id: 'overview', label: 'Expedition' },
+        title: '勘测', items: [
+          { id: 'overview', label: '远征概览' },
           ...scanned.map((b) => ({ id: 'body:' + b.id, label: b.name })),
         ],
       },
       {
-        title: 'THE CANTOS', items: CANTOS.map((c, i) => ({
+        title: '圣歌', items: CANTOS.map((c, i) => ({
           id: 'canto:' + c.id, label: c.title,
           locked: !g.cantos.includes(c.id),
         })),
       },
       {
-        title: 'RECORDS', items: LOGS.map((l) => ({
+        title: '记录', items: LOGS.map((l) => ({
           id: 'log:' + l.id, label: l.title, locked: !g.logsFound.has(l.id),
         })),
       },
@@ -74,7 +73,7 @@ export class Codex {
     this.nav.innerHTML = groups.map((gr) =>
       `<div class="cx-grp">${gr.title}</div>` + gr.items.map((it) =>
         `<button class="cx-item${it.id === this.sel ? ' on' : ''}${it.locked ? ' locked' : ''}"
-           data-id="${it.id}">${it.locked ? '— sealed —' : it.label}</button>`).join('')
+           data-id="${it.id}">${it.locked ? '— 已封存 —' : it.label}</button>`).join('')
     ).join('');
 
     this.nav.querySelectorAll('.cx-item').forEach((b) => {
@@ -96,23 +95,21 @@ export class Codex {
       const total = g.galaxy.length;
       const visited = g.galaxy.filter((s) => s.visited).length;
       return `
-        <h1 class="cx-title">THE LONG SILENCE</h1>
-        <div class="cx-sub">DEEP SURVEY VESSEL PALE SEEKER · COMMISSION 1101</div>
+        <h1 class="cx-title">漫长沉默</h1>
+        <div class="cx-sub">深空勘测船 苍白探寻者 · 第 1101 次委任</div>
         <div class="cx-stats">
-          ${stat('SYSTEMS CHARTED', `${visited} / ${total}`)}
-          ${stat('BODIES CATALOGUED', g.discoveries.size)}
-          ${stat('RESONANCE', `${g.state.resonance} / 7`)}
-          ${stat('CURRENT SYSTEM', g.system.star.name)}
-          ${stat('STAR', `${g.system.star.cls} · ${Math.round(g.system.star.temp)} K`)}
-          ${stat('HULL', `${Math.round(g.ship.hull * 100)} %`)}
+          ${stat('已测绘星系', `${visited} / ${total}`)}
+          ${stat('已编目天体', g.discoveries.size)}
+          ${stat('共鸣', `${g.state.resonance} / 7`)}
+          ${stat('当前星系', g.system.star.name)}
+          ${stat('恒星', `${g.system.star.cls} · ${Math.round(g.system.star.temp)} K`)}
+          ${stat('船壳', `${Math.round(g.ship.hull * 100)} %`)}
         </div>
         <div class="cx-text">
-          <p>Forty thousand years ago, nine hundred inhabited worlds fell silent inside a
-          volume of space eighty light-years across. No debris. No radiation signature.
-          No sign of violence at any scale we can measure.</p>
-          <p>The Choir left their cities lit and their orbits tidy, and they left seven
-          instruments — the Resonators — standing in seven systems.</p>
-          <p class="q">Chart what you can. Scan what you find. Attune what will let you.</p>
+          <p>四万年前，九百个有居民的世界，在横跨八十光年的空间内归于沉寂。没有残骸。没有辐射特征。
+         在我们能测量的任何尺度上，都没有暴力的迹象。</p>
+          <p>合唱团让城市灯火通明、轨道井井有条，并留下了七件乐器——共鸣器——立于七个星系之中。</p>
+          <p class="q">测绘你能测绘的。扫描你找到的。调谐愿意接纳你的。</p>
         </div>`;
     }
 
@@ -141,12 +138,12 @@ export class Codex {
       if (b.kind === 'star') {
         const s = b.spec;
         return `<h1 class="cx-title">${b.name.toUpperCase()}</h1>
-          <div class="cx-sub">${s.desc.toUpperCase()} · CLASS ${s.cls}</div>
+          <div class="cx-sub">${s.desc} · ${s.cls} 型</div>
           <div class="cx-stats">
-            ${stat('EFFECTIVE TEMP', `${Math.round(s.temp)} K`)}
-            ${stat('RADIUS', `${(s.radius / 1000).toFixed(0)} Mm`)}
-            ${stat('LUMINOSITY', `${s.luminosity.toFixed(2)} L☉`)}
-            ${stat('RANGE', fmtDist(d))}
+            ${stat('有效温度', `${Math.round(s.temp)} K`)}
+            ${stat('半径', `${(s.radius / 1000).toFixed(0)} Mm`)}
+            ${stat('光度', `${s.luminosity.toFixed(2)} L☉`)}
+            ${stat('距离', fmtDist(d))}
           </div>
           <div class="cx-text"><p>${STAR_INFO[s.cls] || ''}</p></div>`;
       }
@@ -154,11 +151,11 @@ export class Codex {
       if (b.kind === 'anomaly') {
         const info = ANOMALY_INFO[b.anomalyType];
         return `<h1 class="cx-title">${b.name.toUpperCase()}</h1>
-          <div class="cx-sub">${info.label} · NON-NATURAL ORIGIN</div>
+          <div class="cx-sub">${info.label} · 非自然成因</div>
           <div class="cx-stats">
-            ${stat('CLASSIFICATION', info.label)}
-            ${stat('RANGE', fmtDist(d))}
-            ${stat('SYSTEM', g.system.star.name)}
+            ${stat('分类', info.label)}
+            ${stat('距离', fmtDist(d))}
+            ${stat('星系', g.system.star.name)}
           </div>
           <div class="cx-text"><p>${info.text}</p></div>`;
       }
@@ -167,24 +164,24 @@ export class Codex {
       const info = TYPE_INFO[s.type];
       const g0 = (s.radius / 6371) * 1.0;
       return `<h1 class="cx-title">${b.name.toUpperCase()}</h1>
-        <div class="cx-sub">${info.label.toUpperCase()}${b.kind === 'moon' ? ' · SATELLITE' : ''}</div>
+        <div class="cx-sub">${info.label}${b.kind === 'moon' ? ' · 卫星' : ''}</div>
         <div class="cx-stats">
-          ${stat('RADIUS', `${Math.round(s.radius)} km`)}
-          ${stat('SURFACE GRAVITY', `${g0.toFixed(2)} g`)}
-          ${stat('ORBITAL RADIUS', fmtDist(s.orbitR))}
-          ${stat('AXIAL TILT', `${(s.tilt * 57.3).toFixed(1)}°`)}
-          ${stat('ROTATION', `${(6.283 / Math.abs(s.spinRate) / 3600).toFixed(1)} h`)}
-          ${stat('ATMOSPHERE', s.atmo ? 'PRESENT' : 'NEGLIGIBLE')}
-          ${stat('HYDROSPHERE', (s.type === 'terran' || s.type === 'ocean') ? `${Math.round(s.sea * 100)} %` : 'NONE')}
-          ${stat('RING SYSTEM', s.rings ? 'YES' : 'NO')}
+          ${stat('半径', `${Math.round(s.radius)} km`)}
+          ${stat('表面重力', `${g0.toFixed(2)} g`)}
+          ${stat('轨道半径', fmtDist(s.orbitR))}
+          ${stat('轴倾角', `${(s.tilt * 57.3).toFixed(1)}°`)}
+          ${stat('自转周期', `${(6.283 / Math.abs(s.spinRate) / 3600).toFixed(1)} 小时`)}
+          ${stat('大气', s.atmo ? '存在' : '可忽略')}
+          ${stat('水圈', (s.type === 'terran' || s.type === 'ocean') ? `${Math.round(s.sea * 100)} %` : '无')}
+          ${stat('环系统', s.rings ? '有' : '无')}
         </div>
         <div class="cx-text">
           <p>${info.text}</p>
-          ${s.night ? '<p class="q">Photometry of the night hemisphere shows structured emission along the coastlines. Someone lived here. The lights are still on.</p>' : ''}
+          ${s.night ? '<p class="q">夜半球光度测量显示海岸沿线存在结构化的发光。有人曾住在这里。灯火至今未熄。</p>' : ''}
         </div>`;
     }
 
-    return '<div class="cx-empty">no record</div>';
+    return '<div class="cx-empty">无记录</div>';
   }
 }
 

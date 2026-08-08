@@ -2,15 +2,14 @@ import * as THREE from 'three';
 import { NOISE, LOGD_V_PARS, LOGD_V, LOGD_F_PARS, LOGD_F } from './glsl/noise.js';
 
 /* ============================================================================
-   Deep-sky background.
+   深空背景。
 
-   Two parts, because one alone never looks right:
-     1. A baked nebula cubemap — large, soft, mostly *dark* structure. Real
-        astrophotography is 95% black; the moment the sky is full of purple
-        clouds it reads as a screensaver. Density is kept low and the dynamic
-        range high so bloom does the work.
-     2. A real HDR point-star field with a physical magnitude distribution and
-        blackbody colours, so the bright ones bloom and streak like a lens.
+   两部分，因为单独任何一个都不好看：
+     1. 烘焙的星云立方体贴图——大而柔和、以*暗*结构为主。真实的深空摄影
+        95% 是黑的；一旦天空满是紫色云团，它就变成了屏保。密度保持低、
+        动态范围保持高，让泛光去做它的工作。
+     2. 真实 HDR 的点状星场，带物理星等分布与黑体颜色，于是亮星会像镜头
+        一样泛光、拖出光痕。
    ========================================================================== */
 
 const NEBULA_FRAG = /* glsl */`

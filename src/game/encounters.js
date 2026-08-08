@@ -1,59 +1,57 @@
 import * as THREE from 'three';
 
 /* ============================================================================
-   Encounters.
+   遭遇。
 
-   The traffic exists whether or not you talk to it, which is the point: this
-   module adds no entities and moves nothing. It watches distances, and when the
-   Pale Seeker gets close enough to something crewed, that something says
-   whatever a ship of its trade would say to a survey vessel it did not expect.
+   无论你是否与它们交谈，交通都照常存在——这正是关键：本模块不新增任何实体，
+   也不移动任何东西。它只是观察距离，当苍白探寻者靠近某艘有人驾驶的船只时，
+   对方会说出它的行业会对一艘意料之外的勘测船说的话。
 
-   Two rules keep it from becoming noise:
+   两条规则让它不至于变成噪音：
 
-   **Hail once, ever.** A ship that greets you every time you pass turns the one
-   inhabited thing in the system into a vending machine. Each contact has
-   exactly one line, and once it is spent the ship goes quiet for good.
+   **每次只打招呼一次，仅此一次。** 一艘每次路过都要问候你的船，会把星系中
+   唯一有居民的东西变成一台自动售货机。每段接触只有一句台词，一旦说完，
+   这艘船便永远归于沉默。
 
-   **Say something only they could say.** A hauler talks about mass and margins,
-   a patrol about your registration, a salvager about what it is cutting up. The
-   Choir motes do not talk at all — the silence *is* the content, and nothing
-   would spend it faster than giving them dialogue.
+   **只说只有它们才说得出口的话。** 货船谈论质量与利润空间，巡逻船谈论你的
+   注册信息，打捞船谈论它正在切割的东西。合唱团的尘埃粒子则完全不说话——
+   沉默本身就是内容，给它们配台词只会让这份内容更快被挥霍殆尽。
    ========================================================================== */
 
 const _v = new THREE.Vector3();
 
-/** How close, in ship lengths, a contact has to be before it notices you. */
+/** 接触对象需要多近（以船长为单位）才会注意到你。 */
 const HAIL_RANGE = 900;
 
 const LINES = {
   freighter: [
-    ['Survey vessel, you are inside my braking cone. I cannot stop. You can.', 'BULK HAULER'],
-    ['Institute markings. Long way out for a chart-maker.', 'BULK HAULER'],
-    ['Nine hundred tonnes of nothing anyone needs. Same as last run.', 'BULK HAULER'],
-    ['We keep the lanes lit. Nobody keeps them safe. Mind that.', 'BULK HAULER'],
+    ['勘测船，你在我减速锥里面。我停不下来。你可以。', '散装货船'],
+    ['研究院的标记。对制图人来说可够远的。', '散装货船'],
+    ['九百吨没人需要的东西。和上次那趟一样。', '散装货船'],
+    ['航道是我们照亮的。没人保证它们安全。当心点。', '散装货船'],
   ],
   courier: [
-    ['Courier on schedule. Do not follow me, I have nothing aboard worth it.', 'COURIER'],
-    ['You are the Pale Seeker. They talk about you at the Gate.', 'COURIER'],
-    ['Whatever you are looking for out here — it was gone before we got here.', 'COURIER'],
+    ['信使按时刻表航行。别跟着我，我船上没有值得抢的东西。', '信使'],
+    ['你是苍白探寻者。在星门那儿他们常提起你。', '信使'],
+    ['无论你在这外面找什么——它在我们到这儿之前就已经不在了。', '信使'],
   ],
   tug: [
-    ['Working. Keep your wash off my cable.', 'YARD TENDER'],
-    ['Found a hull last month with the coffee still in the cups. Forty thousand years.', 'YARD TENDER'],
-    ['If you are going near the Resonator, do not touch anything. Ask the last one who did.', 'YARD TENDER'],
+    ['工作中。别让尾流碰到我的缆绳。', '船坞勤务'],
+    ['上个月找到一具船壳，杯子里的咖啡还在。四万年了。', '船坞勤务'],
+    ['要是你要靠近共鸣器，别碰任何东西。去问问上一个碰过的人。', '船坞勤务'],
   ],
   patrol: [
-    ['Pale Seeker, Institute Vigil. Registration confirmed. Carry on.', 'INSTITUTE PATROL'],
-    ['We log everything that moves in this system. Today that is you and four freighters.', 'INSTITUTE PATROL'],
-    ['Chart it, scan it, do not attune to it without telling us first.', 'INSTITUTE PATROL'],
+    ['苍白探寻者，这里是研究院守望。注册信息已确认。继续航行。', '研究院巡逻'],
+    ['本星系内一切移动物体我们都会记录。今天是你和四艘货船。', '研究院巡逻'],
+    ['测绘它、扫描它，但先报告再调谐。', '研究院巡逻'],
   ],
   drone: [
-    ['<automated survey drone — carrier tone only>', 'CONTACT'],
-    ['<telemetry burst · 4.2 Mb · unencrypted · a mineral survey>', 'CONTACT'],
+    ['<自动勘测无人机——仅载波音调>', '联络'],
+    ['<遥测数据流 · 4.2 Mb · 未加密 · 一份矿物勘测报告>', '联络'],
   ],
   station: [
-    ['Pale Seeker, you have the outer berth. Mind the tender traffic.', 'TRAFFIC CONTROL'],
-    ['Welcome in, Seeker. Eleven thousand souls aboard and every one of them wants news.', 'TRAFFIC CONTROL'],
+    ['苍白探寻者，外港泊位归你。注意勤务船交通。', '交通管制'],
+    ['欢迎入港，探寻者。船上有一万一千个灵魂，每一个都想知道新消息。', '交通管制'],
   ],
 };
 
@@ -93,12 +91,12 @@ export class Encounters {
       return;
     }
 
-    // The Choir answer differently, and only once per system.
+    // 合唱团的回应与众不同，而且每个星系只有一次。
     const mote = g.fleet.craft.find((c) => c.faction === 'choir' && !c.hailed);
     if (mote && _v.copy(mote.absPos).sub(shipPos).lengthSq() < (mote.length * 600) ** 2) {
       mote.hailed = true;
-      g.hud.narrate('It does not answer. It changes course, very slightly, to keep you in view.',
-        'UNRESOLVED CONTACT');
+      g.hud.narrate('它不回答。它略微改变了航向，好让你始终能看见它。',
+        '未解联络');
       g.audio.ping('resonate');
       this._cool = 14;
     }
@@ -107,11 +105,11 @@ export class Encounters {
   _speak(pool, who) {
     if (!pool || !pool.length) return;
     const g = this.game;
-    // deterministic per system, so a given contact always says the same thing
+    // 按星系确定性地选择，因此某段固定的接触永远说同一句话
     const i = Math.abs(hash(who + g.currentSystemId)) % pool.length;
     const [line, tag] = pool[i];
     g.hud.narrate(line, tag);
-    g.hud.log(`HAIL · ${who}`, 'ok');
+    g.hud.log(`联络 · ${who}`, 'ok');
     g.audio.ping('ui');
     this._cool = 12;
   }

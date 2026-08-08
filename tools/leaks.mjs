@@ -1,9 +1,8 @@
-// Find holes in the hull.
+// 寻找船壳上的洞。
 //
-// The exterior scene is hidden and its clear colour set to magenta, so the only
-// way magenta reaches the frame is through a gap in the interior geometry. The
-// canopy is legitimately transparent, so the cockpit is expected to leak; every
-// other station should come back clean.
+// 外部场景被隐藏、清屏色设为洋红，因此洋红到达画面的唯一途径是穿过内部
+// 几何体的缝隙。座舱盖是正当透明的，因此驾驶舱泄漏在意料之中；其余每个
+// 站位都应当干净地返回。
 //
 //   node tools/leaks.mjs [--save]
 import { chromium } from 'playwright';

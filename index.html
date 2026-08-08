@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
 <meta name="theme-color" content="#000000" />
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<title>THE LONG SILENCE</title>
-<meta name="description" content="Explore a procedurally generated galaxy from the cockpit of the deep survey vessel PALE SEEKER. Scan worlds, walk your ship, and follow the Resonators." />
+<title>漫长沉默</title>
+<meta name="description" content="从深空勘测船“苍白探寻者”的驾驶舱出发，探索一个程序生成的星系。扫描世界、漫步你的飞船，追随共鸣器的指引。" />
 <meta name="author" content="Anshu Chimala" />
 <link rel="canonical" href="https://longsilence.anshu.dev/" />
 
@@ -17,25 +17,24 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="manifest" href="/site.webmanifest" />
 
-<!-- rich embeds. The image is a real frame captured out of the running game
-     (tools/splash.mjs) rather than mocked-up key art. Absolute URLs are
-     required: crawlers do not resolve relative ones. -->
+<!-- 富媒体分享卡片。图片是运行中的游戏真实截取的一帧（tools/splash.mjs），
+     而非仿制的宣传海报。必须使用绝对 URL：爬虫不会解析相对路径。 -->
 <meta property="og:type" content="website" />
-<meta property="og:site_name" content="THE LONG SILENCE" />
-<meta property="og:title" content="THE LONG SILENCE" />
-<meta property="og:description" content="Explore a procedurally generated galaxy from the cockpit of the deep survey vessel PALE SEEKER. Scan worlds, walk your ship, and follow the Resonators." />
+<meta property="og:site_name" content="漫长沉默" />
+<meta property="og:title" content="漫长沉默" />
+<meta property="og:description" content="从深空勘测船“苍白探寻者”的驾驶舱出发，探索一个程序生成的星系。扫描世界、漫步你的飞船，追随共鸣器的指引。" />
 <meta property="og:url" content="https://longsilence.anshu.dev/" />
 <meta property="og:image" content="https://longsilence.anshu.dev/og.jpg" />
 <meta property="og:image:type" content="image/jpeg" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="The cockpit of a survey ship, instruments lit, looking out through the canopy at a blue world with its terminator in view." />
+<meta property="og:image:alt" content="一艘勘测船的驾驶舱，仪表亮着，透过座舱盖望向外面的蓝色星球，晨昏线尽收眼底。" />
 
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="THE LONG SILENCE" />
-<meta name="twitter:description" content="Explore a procedurally generated galaxy from the cockpit of the deep survey vessel PALE SEEKER. Scan worlds, walk your ship, and follow the Resonators." />
+<meta name="twitter:title" content="漫长沉默" />
+<meta name="twitter:description" content="从深空勘测船“苍白探寻者”的驾驶舱出发，探索一个程序生成的星系。扫描世界、漫步你的飞船，追随共鸣器的指引。" />
 <meta name="twitter:image" content="https://longsilence.anshu.dev/og.jpg" />
-<meta name="twitter:image:alt" content="The cockpit of a survey ship, instruments lit, looking out through the canopy at a blue world with its terminator in view." />
+<meta name="twitter:image:alt" content="一艘勘测船的驾驶舱，仪表亮着，透过座舱盖望向外面的蓝色星球，晨昏线尽收眼底。" />
 </head>
 <body>
   <canvas id="scene"></canvas>
@@ -51,22 +50,21 @@
           <path d="M60 4 L60 18 M60 102 L60 116 M4 60 L18 60 M102 60 L116 60" class="bm-tick"/>
         </svg>
       </div>
-      <h1 class="boot-title">THE LONG SILENCE</h1>
-      <div class="boot-sub">DEEP SURVEY VESSEL &middot; <span class="accent">PALE SEEKER</span></div>
+      <h1 class="boot-title">漫长沉默</h1>
+      <div class="boot-sub">深空勘测船 &middot; <span class="accent">苍白探寻者</span></div>
       <div class="boot-bar"><i id="bootFill"></i></div>
-      <div class="boot-status" id="bootStatus">initialising</div>
-      <button id="bootStart" class="boot-start" hidden>WAKE</button>
-      <div class="boot-legal">requires WebGL2 &middot; headphones recommended</div>
+      <div class="boot-status" id="bootStatus">正在初始化</div>
+      <button id="bootStart" class="boot-start" hidden>苏醒</button>
+      <div class="boot-legal">需要 WebGL2 &middot; 建议佩戴耳机</div>
     </div>
   </div>
 
-  <!-- ====================== IN-WORLD OVERLAY ====================== -->
-  <!-- Instruments live on the dashboard. This layer is only for things that
-       exist in the crew member's head: what they are looking at, what they
-       were just told, and what they can reach. -->
+  <!-- ====================== 世界内覆盖层 ====================== -->
+  <!-- 仪表都位于仪表盘上。这一层只承载存在于乘员脑中的东西：
+       他们正在看什么、刚刚被告知什么，以及他们够得着什么。 -->
   <div id="hud" class="hidden">
 
-    <!-- aiming reticle, pilot only -->
+    <!-- 瞄准准星，仅驾驶员可见 -->
     <div id="reticle" class="hidden">
       <svg viewBox="0 0 120 120">
         <circle cx="60" cy="60" r="21" class="r-ring"/>
@@ -76,69 +74,66 @@
       </svg>
     </div>
 
-    <!-- contact markers projected on the canopy -->
+    <!-- 投影在座舱盖上的接触标记 -->
     <div id="markers"></div>
 
-    <!-- message log -->
+    <!-- 消息日志 -->
     <div id="log"></div>
 
-    <!-- The prompt sits directly above the subtitle, in one stack anchored
-         where the subtitle used to be anchored alone. Both used to be absolute
-         at fixed percentages, and the subtitle's height depends on how many
-         lines the dialogue runs to - so any fixed percentage for the prompt is
-         a guess, and at 945px tall they measured a 21px overlap. Stacking them
-         makes the prompt track the subtitle's real height instead.
-         .hidden is display:none, so with nothing to interact with the prompt
-         collapses out of the column and the subtitle sits exactly where it did
-         before, at the 4% that was chosen to clear the main display. -->
+    <!-- 提示紧贴字幕上方，处于同一个堆栈中，锚定在字幕原本独自锚定的位置。
+         两者过去都使用固定百分比的绝对定位，而字幕高度取决于对白行数——
+         因此任何固定的提示百分比都是猜测，在 945px 高的屏幕上实测重叠了 21px。
+         将它们堆叠起来，提示便会跟随字幕的真实高度。
+         .hidden 是 display:none，因此无事可交互时提示会从列中折叠消失，
+         字幕恰好落回先前的位置，即那个为避开主显示而选的 4%。 -->
     <div id="narrStack">
-      <!-- interaction prompt -->
+      <!-- 交互提示 -->
       <div id="prompt" class="hidden">
         <b id="promptKey">E</b><span id="promptLabel"></span><em id="promptHint"></em>
       </div>
 
-      <!-- narrative subtitle -->
+      <!-- 叙事字幕 -->
       <div id="narr"><div id="narrText"></div></div>
     </div>
 
-    <!-- contextual controls -->
+    <!-- 情境化操作 -->
     <div id="hints"></div>
 
-    <!-- fold banner -->
-    <div id="foldOverlay"><div class="fo-t">FOLD</div><div class="fo-s" id="foldSub"></div></div>
+    <!-- 跃迁横幅 -->
+    <div id="foldOverlay"><div class="fo-t">跃迁</div><div class="fo-s" id="foldSub"></div></div>
 
-    <!-- damage / alert vignette handled in post; this is the audio-cue text -->
+    <!-- 损伤 / 警报暗角在后处理中处理；这里是音频提示文字 -->
     <div id="alert" class="hidden"></div>
   </div>
 
-  <!-- ====================== ARCHIVE ====================== -->
+  <!-- ====================== 档案 ====================== -->
   <div id="codex" class="panel hidden">
-    <div class="p-head"><h2>ARCHIVE</h2><button class="p-close" data-close="codex">✕</button></div>
+    <div class="p-head"><h2>档案</h2><button class="p-close" data-close="codex">✕</button></div>
     <div class="p-body codex-body">
       <div class="codex-nav" id="codexNav"></div>
       <div class="codex-main" id="codexMain"></div>
     </div>
   </div>
 
-  <!-- ====================== STAR MAP ====================== -->
+  <!-- ====================== 星图 ====================== -->
   <div id="starmap" class="panel hidden">
-    <div class="p-head"><h2>STELLAR CARTOGRAPHY</h2><button class="p-close" data-close="starmap">✕</button></div>
+    <div class="p-head"><h2>星系制图</h2><button class="p-close" data-close="starmap">✕</button></div>
     <div class="p-body map-body">
       <canvas id="mapCanvas"></canvas>
       <div class="map-side" id="mapSide"></div>
     </div>
   </div>
 
-  <!-- ====================== TOUCH ====================== -->
+  <!-- ====================== 触屏 ====================== -->
   <div id="touchUI" class="hidden">
     <div id="stickL" class="stick"><i></i></div>
     <div id="stickR" class="stick"><i></i></div>
     <div id="touchBtns">
-      <button class="tb" data-act="use">USE</button>
-      <button class="tb" data-act="boost">RUN</button>
-      <button class="tb" data-act="scan">SCAN</button>
-      <button class="tb" data-act="auto">AUTO</button>
-      <button class="tb" data-act="fold">FOLD</button>
+      <button class="tb" data-act="use">使用</button>
+      <button class="tb" data-act="boost">奔跑</button>
+      <button class="tb" data-act="scan">扫描</button>
+      <button class="tb" data-act="auto">自动</button>
+      <button class="tb" data-act="fold">跃迁</button>
     </div>
     <div id="touchThr">
       <button class="tt" data-act="thrUp">+</button>

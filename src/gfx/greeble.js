@@ -2,22 +2,21 @@ import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 
 /* ============================================================================
-   The greeble kit.
+   greeble 套件。
 
-   Everything built out of hard vacuum-rated matter in this game — the player's
-   hull, freighters, stations, derelicts, Choir monuments — is surfaced by the
-   same code, because a universe whose objects were shaded by five different
-   authors reads as five different games. One plate-seam law, one weathering
-   law, one rim term, one set of base materials.
+   本游戏中一切以真空级材料建造的东西——玩家的船壳、货船、空间站、废墟、
+   合唱团纪念碑——都由同一套代码蒙皮，因为一个物体被五个不同作者着色的
+   宇宙，会读作五个不同的游戏。一条板缝法则、一条风化法则、一条边缘项、
+   一套基础材质。
 
-   Two conventions matter:
+   两条约定很重要：
 
-   **Metres in, world units out.** Everything here is modelled at 1 unit = 1
-   metre and scaled by `M` when it is mounted. Numbers stay legible.
+   **米进，世界单位出。** 这里的一切都以 1 单位 = 1 米建模，并在安装时
+   用 `M` 缩放。数字保持可读。
 
-   **Bake transforms into geometry, then merge.** `place()` returns geometry
-   already positioned, so `position` in the shader is the *object's own* space
-   and plate seams run continuously across part boundaries instead of
+   **把变换烘焙进几何体，然后合并。** `place()` 返回已定位的几何体，
+   因此着色器中的 `position` 是*对象自身*的空间，板缝跨越零件边界连续
+   贯通，而非
    restarting on every mesh. Merging by material then collapses a hundred parts
    into a handful of draws.
    ========================================================================== */
@@ -623,7 +622,7 @@ export function decalSheet() {
 
   const LIGHT = '#ff0000', DARK = '#00ff00', OXIDE = '#0000ff';
   const cell = (n, x0, y0, x1, y1) => { cells[n] = [x0 / DW, 1 - y1 / DH, x1 / DW, 1 - y0 / DH]; };
-  const font = (px, w) => (w || 'bold') + ' ' + px + 'px "Helvetica Neue", Helvetica, Arial, sans-serif';
+  const font = (px, w) => (w || 'bold') + ' ' + px + 'px "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Helvetica Neue", Helvetica, Arial, sans-serif';
   /* Tracked text. Canvas letterSpacing is not portable, so glyphs are stepped
      by hand; wide tracking is most of what makes lettering read as stencilled
      rather than as a word processor. */
@@ -648,15 +647,14 @@ export function decalSheet() {
   bar(8, 28, 644, 33, LIGHT);
   bar(8, 91, 644, 96, LIGHT);
   txt('PS-114', 26, 78, 44, LIGHT, 6);
-  txt('PALE SEEKER', 258, 76, 38, LIGHT, 11);
-  // The two service lines are the smallest lettering on the ship. Set them at
-  // a size that survives the mip chain rather than one that fits comfortably.
-  txt('CREW 04', 26, 23, 17, LIGHT, 3);
-  txt('DEEP SURVEY / LONG DURATION', 636, 23, 17, LIGHT, 2, 'right');
+  txt('苍白探寻者', 258, 76, 38, LIGHT, 11);
+  // 两条勤务线是船上最小的字样。字号要能扛过 mip 链，而不是仅仅看着合适。
+  txt('乘员 04', 26, 23, 17, LIGHT, 3);
+  txt('深空勘测 / 长期任务', 636, 23, 17, LIGHT, 2, 'right');
 
   // --- dorsal wordmark ------------------------------------------------------
   cell('name', 8, 124, 700, 222);
-  txt('PALE SEEKER', 354, 190, 62, LIGHT, 22, 'center');
+  txt('苍白探寻者', 354, 190, 62, LIGHT, 22, 'center');
   bar(60, 202, 648, 209, LIGHT);
   bar(60, 132, 300, 138, OXIDE);
   bar(408, 132, 648, 138, OXIDE);
@@ -696,8 +694,8 @@ export function decalSheet() {
 
   // --- a caution stencil ----------------------------------------------------
   cell('caut', 716, 250, 1000, 306);
-  txt('CAUTION', 722, 282, 30, LIGHT, 5);
-  txt('ENGINE EFFLUX', 722, 302, 17, LIGHT, 4);
+  txt('注意', 722, 282, 30, LIGHT, 5);
+  txt('引擎喷流', 722, 302, 17, LIGHT, 4);
 
   // --- an access hatch ------------------------------------------------------
   cell('hatch', 244, 236, 372, 364);
@@ -709,8 +707,8 @@ export function decalSheet() {
     c.beginPath(); c.arc(bx, by, 5, 0, Math.PI * 2); c.fill();
   }
   c.restore();
-  txt('ACCESS', 308, 296, 19, LIGHT, 4, 'center');
-  txt('NO STEP', 308, 358, 17, LIGHT, 4, 'center');
+  txt('出入口', 308, 296, 19, LIGHT, 4, 'center');
+  txt('禁止踩踏', 308, 358, 17, LIGHT, 4, 'center');
 
   // --- a rescue arrow -------------------------------------------------------
   cell('arrow', 388, 236, 692, 336);
@@ -721,8 +719,8 @@ export function decalSheet() {
   c.lineTo(536, 304); c.lineTo(450, 304); c.lineTo(450, 330); c.closePath();
   c.fill();
   c.restore();
-  txt('RESCUE', 556, 278, 24, LIGHT, 4);
-  txt('CUT HERE', 556, 316, 20, OXIDE, 4);
+  txt('救援', 556, 278, 24, LIGHT, 4);
+  txt('从此处切割', 556, 316, 20, OXIDE, 4);
 
   const tex = new THREE.CanvasTexture(cv);
   tex.colorSpace = THREE.NoColorSpace ?? THREE.LinearSRGBColorSpace;

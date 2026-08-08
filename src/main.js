@@ -17,16 +17,14 @@ function fatal(msg, err) {
   if (err) console.error(err);
 }
 
-/**
- * Phones are turned away at the door rather than served a reduced build.
+/*
+ * 手机用户会在门口被礼貌劝退，而不是得到一个阉割版。
  *
- * This game spends its entire budget on one thing: how it looks at full
- * resolution on a discrete GPU. Everything that makes it worth looking at —
- * the raymarched atmospheres, the volumetric cloud decks, the terrain
- * self-shadowing, the twenty-pass post chain — is exactly what a phone cannot
- * afford. The honest options were to cut those features for everyone or to
- * ship a phone build that misrepresents the game. Neither is worth it, so a
- * handset gets a short, clear message instead of a bad first impression.
+ * 这款游戏把全部预算都花在一件事上：在独立 GPU 上满分辨率时看起来如何。
+ * 一切让它值得一看的东西——光线步进大气、体量云层、地形自阴影、二十道后期链路——
+ * 恰恰都是手机负担不起的。诚实的选择只有两种：为所有人砍掉这些特性，
+ * 或者交付一个曲解这款游戏的手机版。两者都不值得，
+ * 因此一台手持设备会收到一段简短而明确的讯息，而不是糟糕的第一印象。
  */
 function isHandset() {
   const coarse = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
@@ -37,13 +35,13 @@ function isHandset() {
 function desktopOnly() {
   bootEl.innerHTML = `
     <div class="boot-inner">
-      <h1 class="boot-title">THE LONG SILENCE</h1>
-      <div class="boot-sub">DEEP SURVEY VESSEL &middot; <span class="accent">PALE SEEKER</span></div>
+      <h1 class="boot-title">漫长沉默</h1>
+      <div class="boot-sub">深空勘测船 &middot; <span class="accent">苍白探寻者</span></div>
       <p class="boot-gate">
-        This one wants a real screen and a real GPU.<br>
-        Open it on a desktop or laptop.
+        这款游戏需要真正的屏幕和真正的 GPU。<br>
+        请在台式机或笔记本电脑上打开。
       </p>
-      <div class="boot-legal">requires WebGL2 &middot; headphones recommended</div>
+      <div class="boot-legal">需要 WebGL2 &middot; 建议佩戴耳机</div>
     </div>`;
   bootEl.classList.add('gate');
 }
@@ -55,7 +53,7 @@ function desktopOnly() {
 
   // WebGL2 gate
   const probe = document.createElement('canvas').getContext('webgl2');
-  if (!probe) { fatal('WebGL2 unavailable on this device'); return; }
+  if (!probe) { fatal('此设备不支持 WebGL2'); return; }
 
   let game;
   try {
@@ -63,11 +61,11 @@ function desktopOnly() {
     window.__game = game;
     await game.boot();
   } catch (e) {
-    fatal('initialisation failed — see console', e);
+    fatal('初始化失败——详见控制台', e);
     return;
   }
 
-  status.textContent = 'systems nominal';
+  status.textContent = '系统正常';
   startBtn.hidden = false;
 
   const begin = async () => {
@@ -83,8 +81,8 @@ function desktopOnly() {
       setTimeout(() => game.hud.narrate(l.text, l.who), 1200 + i * 5200);
     });
     setTimeout(() => {
-      game.hud.log('SCANNER ONLINE', 'ok');
-      game.hud.log(`SYSTEM · ${game.system.star.name.toUpperCase()}`);
+      game.hud.log('扫描仪在线', 'ok');
+      game.hud.log(`星系 · ${game.system.star.name.toUpperCase()}`);
     }, 900);
   };
 
@@ -93,12 +91,10 @@ function desktopOnly() {
     if (!game.started && (e.code === 'Enter' || e.code === 'Space')) begin();
   });
 
-  /* ---------------------------------------------------------------- loop
-     ?record=N drives the loop by hand at a fixed 1/N second step instead of
-     from the wall clock. Capture is far slower than real time, so a recorder
-     that samples a free-running loop gets uneven, stuttering motion; stepping
-     one frame per captured image means the footage plays back at exactly the
-     intended speed however long the grab took. */
+  /* ---------------------------------------------------------------- 主循环
+     ?record=N 以固定的 1/N 秒步进方式手动驱动循环，而非依据墙钟。录制远慢于
+     实时，因此以自由循环为采样源的录制器会得到不均匀、抖动的运动；每张捕获图像
+     推进一帧，意味着无论抓取耗时多久，素材都以精确的预期速度回放。 */
   const RECORD = +(new URLSearchParams(location.search).get('record') || 0);
   let last = performance.now();
   const MAX_DT = 1 / 15;
@@ -109,14 +105,14 @@ function desktopOnly() {
       else game.updateIdle?.(dt);
       game.engine.time = game.time;
       game.engine.dt = dt;
-      // the cabin is a second pass with its own camera; see Engine.render
+      // 舱内是带有自己相机的第二趟渲染；见 Engine.render
       game.engine.render(
         game.interiorRig && game.interiorRig.visible ? game.interiorScene : null,
         game.interiorCam);
       if (!RECORD) game.engine.adapt(dt);
     } catch (e) {
       console.error(e);
-      fatal('runtime error — see console', e);
+      fatal('运行时错误——详见控制台', e);
       throw e;
     }
   }
@@ -131,7 +127,7 @@ function desktopOnly() {
   }
 
   if (RECORD) {
-    // one frame per call, so the capture tool controls time exactly
+    // 每次调用一帧，因此捕获工具能精确控制时间
     window.__step = (n = 1) => { for (let i = 0; i < n; i++) step(1 / RECORD); };
     step(1 / RECORD);
   } else {

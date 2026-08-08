@@ -2,21 +2,20 @@ import * as THREE from 'three';
 import { FS_VERT } from './glsl/noise.js';
 
 /* ============================================================================
-   Hand-rolled HDR post pipeline.
+   手搓的 HDR 后期管线。
 
-     scene ──▶ HDR (half-float, optional MSAA, depth texture attached)
+     scene ──▶ HDR（半浮点、可选 MSAA、附深度纹理）
                  │
-                 ├─▶ linear depth (per scene pass) ─▶ AO ─▶ bilateral blur
-                 ├─▶ bright prefilter ─▶ 6× dual-filter downsample
-                 │                        └─▶ tent upsample = physical bloom
-                 ├─▶ anamorphic streak (horizontal 3-pass)
-                 ├─▶ flare pass (radial god-rays + lens ghosts + halo)
+                 ├─▶ 线性深度（每场景一趟）─▶ AO ─▶ 双边模糊
+                 ├─▶ 高光预滤波 ─▶ 6× 双滤波降采样
+                 │                        └─▶ 帐篷上采样 = 物理泛光
+                 ├─▶ 变形光晕（水平 3 趟）
+                 ├─▶ 光晕趟（径向体积光 + 镜头鬼影 + 光环）
                  │
-                 └─▶ composite (AO + bloom + flares + radial blur + CA + grain +
-                                vignette + AgX tonemap + dither) ─▶ FXAA ─▶ screen
+                 └─▶ 合成（AO + 泛光 + 光晕 + 径向模糊 + 色差 + 颗粒 +
+                                暗角 + AgX 色调映射 + 抖动）─▶ FXAA ─▶ 屏幕
 
-   Everything is written by hand so the look stays consistent and the whole
-   chain fits inside a mobile fill-rate budget.
+   一切都是手写的，让观感保持一致，并且整条链塞进移动端填充率预算内。
    ========================================================================== */
 
 const COMMON_UNIFORM_TEX = () => ({ value: null });

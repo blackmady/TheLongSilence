@@ -2,47 +2,37 @@ import * as THREE from 'three';
 import { NOISE, LOGD_V_PARS, LOGD_V, LOGD_F_PARS, LOGD_F } from '../gfx/glsl/noise.js';
 
 /* ============================================================================
-   Standing on a world.
+   站在一颗世界上。
 
-   Orbit and ground are two different rendering problems and trying to solve
-   both with one sphere solves neither: from orbit you need a whole planet with
-   no visible geometry, and from the ground you need ten kilometres of terrain
-   with no visible *sphere*. So the ground is its own scene — a patch of
-   landscape, a field of scatter, a sky dome — swapped in at touchdown.
+   轨道与地面是两个不同的渲染问题，想用一个球体同时解决两者，结果一个也
+   解决不了：从轨道上你需要一整颗看不到几何体的行星；从地面上你需要十公里
+   看不到*球体*的地形。因此地面是它自己的场景——一片景观、一片散布物、
+   一座天穹——在着陆时切换进来。
 
-   Six things make it read, and the first one is the one everything else hangs
-   off.
+   六件事让它成立，而第一件是其余一切的挂靠点。
 
-   **One sampling scale, agreed by everybody.** The height field takes a lod —
-   the spacing in metres that the answer is about to be sampled at — and simply
-   does not contain any band finer than that. The mesh passes its own ring
-   pitch, the shadow march passes the pitch of the vertex it feeds, a boulder
-   passes its own footprint. Nothing downstream can then disagree with anything
-   else, and nothing is ever handed detail it cannot carry.
+   **一种采样尺度，人人同意。** 高度场接受一个 lod——答案即将被采样的
+   米间距——并且根本不含比它更细的任何频带。网格传入它自己的环距，阴影
+   步进传入它所喂给的顶点的间距，一块巨石传入它自己的足迹。下游没有任何
+   东西能与其他东西相矛盾，也永远不会被交给它承载不了的细节。
 
-   Getting that wrong does not look like aliasing, which is the trap: it looks
-   like *art direction*. Gating the bands on camera range instead meant the far
-   mesh was handed 150 m ridges it sampled every 600 m, and because a marched
-   shadow and a sky-occlusion term are decided by that same undersampled field
-   and then interpolated across a triangle, the error came out as quad-shaped
-   patches of light and dark with the grid's own straight edges in them. An
-   independent reviewer described exactly that as "aerial perspective applied
-   as a milky alpha wash on some ridges and not their neighbours, with visible
-   hard boundaries where the fog volume ends", and as a "regular comb striation
-   repeating across the whole terrain". One parameter, three symptoms.
+   弄错这一点不会表现为锯齿，这正是陷阱：它表现为*美术方向*。改为按相机
+   距离门控频带意味着远处网格被交给了每 600 米采样一次的 150 米山脊，
+   又因为步进的阴影与天空遮挡项由同一片欠采样的场决定、再跨三角形插值，
+   误差就成了带网格自身直边的四边形明暗斑块。一位独立评审者把那种现象
+   精确描述为“雾体积结束处有可见硬边界的、施加在一些山脊而非其邻脊上的
+   乳白 alpha 水洗式空中透视”，以及“贯穿整片地形的规则梳状条纹”。
+   一个参数，三种症状。
 
-   **A radial grid, with equal ring and segment counts.** Rings grow
-   exponentially so triangles stay roughly constant in screen size, skewed
-   outward because a pure exponential spends a third of them inside a hundred
-   metres — ground the fragment shader draws perfectly well — and leaves the
-   skyline sampled every six hundred. What reads as faceted is whichever of the
-   two spacings is *larger*, so spending on segments while rings lag buys
-   nothing.
+   **径向网格，环数与段数相等。** 环呈指数增长，让三角形在屏幕上大致保持
+   恒定大小，并向外偏斜——因为纯指数会把三分之一的三角形花在百米之内
+   （那是片段着色器画得完美无缺的地面），却让天际线每六百米才采样一次。
+   读作多面体的，是两种间距中*较大*的那个，因此在环数落后时把预算花在
+   段数上毫无收益。
 
-   **Shadows, marched.** A geometric ray march up the sun ray against the same
-   height field, in the *vertex* stage. Seventy thousand marches a frame
-   instead of six million, no shadow map, no second pass. It marches against a
-   deliberately coarse version of the field: nothing under twenty metres casts
+   **阴影，步进的。** 在*顶点*阶段，沿太阳光线对同一高度场做几何光线
+   步进。每帧七万次步进，而非六百万次；没有阴影贴图，没有第二趟。它步进
+   的是场的一个刻意粗糙的版本：二十米以下没有任何东西投下
    a shadow anybody could recognise, and asking for one is what used to turn
    march-to-march sampling error into a rash of blobs on every distant peak.
 

@@ -1,6 +1,5 @@
-/* How much two frames actually differ. Reports the fraction of pixels that
- * change by more than N levels, and the mean absolute difference — the only
- * honest way to answer "does this pass do anything".
+/* 两帧实际上相差多少。报告变化超过 N 级的像素比例，以及平均绝对差——
+ * 回答“这一趟有没有起作用”的唯一诚实方式。
  *   node tools/imgdiff.mjs a.png b.png [--thr 10]
  */
 import { execFileSync } from 'node:child_process';

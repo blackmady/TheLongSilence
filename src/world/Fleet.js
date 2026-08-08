@@ -1364,7 +1364,7 @@ export class Fleet {
       const radius = host.radius * (2.2 + rnd());
       add('mote', 'orbit', {
         center: host.absPos, radius, rate: 3.0 / radius, inc: 0.6, phase: rnd(),
-      }, { faction: 'choir', name: 'UNRESOLVED CONTACT' });
+      }, { faction: 'choir', name: '未解联络' });
     }
   }
 
@@ -1439,11 +1439,11 @@ const HULL_NAMES = ['Ashgrain', 'Tallow', 'Nine Reeds', 'Cold Harvest', 'Miserer
   'Thousandth Name', 'Ochre', 'Fen', 'Provident', 'Salt Angel', 'Bellwether'];
 
 const CRAFT_NAMES = {
-  freighter: (r) => `${pick(r, HULL_NAMES)} · bulk`,
-  courier: (r) => `${pick(r, HULL_NAMES)} · courier`,
-  tug: (r) => `Yard tender ${1 + Math.floor(r() * 40)}`,
-  patrol: (r) => `INSTITUTE ${['ARGUS', 'VIGIL', 'KEEPER', 'WARDEN'][Math.floor(r() * 4)]}-${1 + Math.floor(r() * 9)}`,
-  drone: (r) => `Survey drone ${String.fromCharCode(65 + Math.floor(r() * 26))}${1 + Math.floor(r() * 9)}`,
-  mote: () => 'UNRESOLVED CONTACT',
+  freighter: (r) => `${pick(r, HULL_NAMES)} · 货船`,
+  courier: (r) => `${pick(r, HULL_NAMES)} · 信使`,
+  tug: (r) => `船坞勤务 ${1 + Math.floor(r() * 40)}`,
+  patrol: (r) => `研究院 ${['百眼', '守望', '守卫', '看门人'][Math.floor(r() * 4)]}-${1 + Math.floor(r() * 9)}`,
+  drone: (r) => `勘测无人机 ${String.fromCharCode(65 + Math.floor(r() * 26))}${1 + Math.floor(r() * 9)}`,
+  mote: () => '未解联络',
 };
 function pick(r, arr) { return arr[Math.floor(r() * arr.length)]; }

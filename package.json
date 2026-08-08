@@ -1,7 +1,7 @@
 {
   "name": "the-long-silence",
   "version": "1.0.0",
-  "description": "THE LONG SILENCE — a procedural space exploration game in WebGL2",
+  "description": "漫长沉默 —— 一款基于 WebGL2 的程序化太空探索游戏",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

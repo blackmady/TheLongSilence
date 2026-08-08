@@ -1,9 +1,8 @@
-// Raw footage for a trailer.
+// 预告片的原始素材。
 //
-// Same harness as tools/capture.mjs — ?record=N hands the frame loop over, one
-// fixed 1/N step per grabbed frame, so the footage plays back at exactly the
-// intended speed however long the grab took — but a different brief. capture.mjs
-// shoots a cut: every clip is already its final length and the edit only joins
+// 与 tools/capture.mjs 相同的工具——?record=N 把帧循环交过来，每抓取一帧
+// 固定推进 1/N 步，因此无论抓取耗时多久，素材都以精确的预期速度回放——
+// 但任务简报不同。capture.mjs 拍摄成品：每段片段已是最终长度，剪辑只做拼接
 // them. This shoots *rushes*. Each take runs long and unbroken, because the two
 // best things in the game are now sequences the director plays in real time
 // (see SEQUENCES.descent / .ascent) and the only honest way to get those is to

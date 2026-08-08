@@ -1,17 +1,15 @@
 import * as THREE from 'three';
 
 /* ============================================================================
-   The screen-space layer.
+   屏幕空间图层。
 
-   Almost everything that used to live here now lives on the dashboard, in the
-   world, where a pilot would actually read it. What is left is the handful of
-   things that are not physical objects: what you are looking at, what you were
-   just told, and what you can reach.
+   过去住在这里的几乎所有东西，如今都住到了仪表盘上——存在于世界之中，
+   飞行员真正会去读它的地方。剩下的是那些不是物理对象的东西：你在看什么、
+   你刚刚被告知什么、以及你能触碰到什么。
 
-   The directive was the last holdout. It was a centred card drawn over the
-   canopy spar — an overlay occluding the structure it was supposedly mounted
-   behind — and it is now an annunciator strip on the glareshield, which the
-   structure can occlude in turn. Nothing here should ever be an instrument.
+   指引是最后一个顽固分子。它曾是一张悬浮在座舱盖横梁上的居中卡片——
+   一个遮挡着它本该安装在其后的结构的覆盖层——如今它变成了遮光板上的一条
+   指示条，结构反而能遮挡它。这里不该有任何东西成为仪表。
    ========================================================================== */
 
 const _v = new THREE.Vector3();
@@ -79,8 +77,8 @@ export class HUD {
   }
 
   /**
-   * Cinematic mode. Bars and a title card, and every diegetic overlay hidden —
-   * during a sequence the frame belongs to the camera, not to the instruments.
+   * 电影化模式。上下黑边与标题卡片，所有叙事层内的覆盖层全部隐藏——
+   * 在过场动画中，画面属于镜头，而不属于仪表。
    */
   cinematic(on, title, sub) {
     if (!this._cine) {
@@ -111,12 +109,12 @@ export class HUD {
     const piloting = g.mode === 'pilot' || g.mode === 'exterior';
     const uiOpen = g.starmap.open || g.codex.open;
 
-    // ---- reticle only when you are actually flying
+    // ---- 只有真正在驾驶时才显示准星
     this.el.reticle.classList.toggle('hidden', !piloting || uiOpen);
     const p = g.scanProgress || 0;
     this.el.rArc.setAttribute('d', p > 0.001 ? arcPath(60, 60, 21, -90, -90 + p * 360) : '');
 
-    // ---- interaction prompt
+    // ---- 交互提示
     const st = g.mode === 'walk' ? g.player.station : null;
     const showPrompt = !uiOpen && (st || g.mode === 'pilot');
     this.el.prompt.classList.toggle('hidden', !showPrompt);
@@ -124,7 +122,7 @@ export class HUD {
       const key = g.input.hasTouch ? 'USE' : 'E';
       this.el.promptKey.textContent = key;
       if (g.mode === 'pilot') {
-        this.el.promptLabel.textContent = 'LEAVE THE HELM';
+        this.el.promptLabel.textContent = '离开驾驶席';
         this.el.promptHint.textContent = '';
       } else {
         this.el.promptLabel.textContent = st.label;
@@ -133,20 +131,16 @@ export class HUD {
     }
 
     // ---- contextual control hints
-    /* Contextual keys.
+    /* 上下文按键提示。
 
-       This used to key on `mode` alone, and opening a panel does not change
-       mode — so the star map could take the frame, block every movement key,
-       and leave this row still reading "WASD move". The map *is* escapable:
-       Escape closes it and always did. But nothing on screen said so, and a
-       control nobody can find is the same as a control that does not exist.
-       Someone testing the build reported being trapped in it.
+       它过去只根据 `mode` 判断，而打开面板并不会改变 mode——因此星图可以占满画面、
+       屏蔽所有移动按键，而这行提示仍停留在“WASD 移动”。星图是可以退出的：
+       Escape 一直能关闭它。但屏幕上没有任何地方说明这一点，而一个找不到的
+       控制键等同于一个不存在的控制键。某位测试者曾报告被困在其中。
 
-       Landing had the mirror problem. L lands, and L has never appeared here —
-       it is also conditional, since `canLand` wants a solid world inside 2.6
-       radii, so a player pressing every key in turn from the wrong place would
-       conclude it is not possible. It shows up when it is actually available,
-       and says which of land or lift off it will do. */
+       降落曾有过镜像般的问题。L 键可以降落，而 L 从未出现在这里——它也是条件触发的，
+       因为 `canLand` 要求 2.6 倍半径内存在固态世界，所以玩家在错误的位置逐个试按键
+       时会得出“不可能降落”的结论。它只在真正可用时出现，并说明将执行降落还是起飞。 */
     const canLand = !!(!g.landed && g.canLand && g.canLand());
     const hintKey = `${g.mode}|${uiOpen ? 1 : 0}|${canLand ? 1 : 0}`
       + `|${g.landed ? (g.landed.onFoot ? 2 : 1) : 0}`;
@@ -157,34 +151,31 @@ export class HUD {
       this._canLand = canLand;
       let keys;
       if (uiOpen) {
-        keys = [['ESC', 'close'], ['J', 'fold to target']];
+        keys = [['ESC', '关闭'], ['J', '跃迁至目标']];
       } else if (g.landed) {
-        /* The ground has its own controls and used to borrow the flight row,
-           which advertised a throttle, a scanner and an autopilot to somebody
-           standing on a planet. */
+        /* 地面有自己的操作，过去它借用飞行那一行，向站在行星上的人
+           展示油门、扫描仪和自动驾驶。 */
         keys = g.landed.onFoot
-          ? [['WASD', 'walk'], ['MOUSE', 'look'], ['SHIFT', 'run'], ['E', 'board'], ['L', 'lift off']]
-          : [['E', 'step out'], ['L', 'lift off'], ['TAB', 'archive']];
+          ? [['WASD', '行走'], ['鼠标', '视角'], ['SHIFT', '奔跑'], ['E', '登船'], ['L', '起飞']]
+          : [['E', '出舱'], ['L', '起飞'], ['TAB', '档案']];
       } else if (g.mode === 'walk') {
-        keys = [['WASD', 'move'], ['MOUSE', 'look'], ['E', 'use'], ['SHIFT', 'run'],
-          ['V', 'outside view']];
+        keys = [['WASD', '移动'], ['鼠标', '视角'], ['E', '使用'], ['SHIFT', '奔跑'],
+          ['V', '外部视角']];
       } else {
-        /* V has always existed and has never been on this row, which is most of
-           why the view "changed by itself" — the only other things that move it
-           are sitting down and standing up. And free-look is quoted with the
-           mouse button first: Alt is a modifier the window manager may eat, the
-           right button is not, and both have always been wired to it. */
-        keys = [['MOUSE', 'fly'], ['W/S', 'throttle'], ['F', 'scan'], ['G', 'autopilot'],
-          ['J', 'fold'], ['RMB', 'look'], ['V', g.mode === 'exterior' ? 'cockpit' : 'chase cam'],
-          ['E', 'stand']];
-        if (canLand) keys.push(['L', 'land']);
+        /* V 键一直存在，却从未出现在这一行——这正是视角“自行改变”的大部分原因：
+           唯二能让它改变的是坐下和站起。自由视角的说明把鼠标键写在前面：
+           Alt 是窗口管理器可能吞掉的修饰键，右键不会，而两者都一直绑定着它。 */
+        keys = [['鼠标', '飞行'], ['W/S', '油门'], ['F', '扫描'], ['G', '自动驾驶'],
+          ['J', '跃迁'], ['右键', '自由视角'], ['V', g.mode === 'exterior' ? '驾驶舱' : '追击视角'],
+          ['E', '起身']];
+        if (canLand) keys.push(['L', '降落']);
       }
       this.el.hints.innerHTML = keys.map(([k, v]) => `<span><kbd>${k}</kbd>${v}</span>`).join('');
       this._syncTouchLabels();
-      // The row is small and at the bottom edge. Coming into range of a world
-      // you can actually set down on is worth saying out loud, once.
+      // 这一行很小，位于底部边缘。进入一颗确实可以降落的星球范围
+      // 是值得开口说一声的事，只说一次。
       if (canLand && !wasLand && g.target) {
-        this.log(`LANDING AVAILABLE · ${g.target.name.toUpperCase()} · L`, 'ok');
+        this.log(`可降落 · ${g.target.name.toUpperCase()} · L`, 'ok');
       }
     }
 
@@ -212,8 +203,8 @@ export class HUD {
   _syncTouchLabels() {
     const walk = this.game.mode === 'walk';
     const map = walk
-      ? { use: 'USE', boost: 'RUN', scan: 'MAP', auto: 'ARC', fold: 'VIEW' }
-      : { use: 'STAND', boost: 'BOOST', scan: 'SCAN', auto: 'AUTO', fold: 'FOLD' };
+      ? { use: '使用', boost: '奔跑', scan: '地图', auto: '档案', fold: '视角' }
+      : { use: '起身', boost: '加速', scan: '扫描', auto: '自动', fold: '跃迁' };
     document.querySelectorAll('#touchBtns .tb').forEach((b) => {
       const t = map[b.dataset.act];
       if (t) b.textContent = t;

@@ -1,4 +1,4 @@
-// Interior tour: boots once and photographs the cabin from fixed stations.
+// 舱内巡游：启动一次，从固定站位拍摄舱内。
 //   node tools/tour.mjs [--w 1600] [--h 900] [--only name]
 import { chromium } from 'playwright';
 import fs from 'node:fs';

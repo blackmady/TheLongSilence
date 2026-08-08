@@ -1,9 +1,8 @@
-// Assemble the trailer from the rushes in shots/raw.
+// 从 shots/raw 中的素材组装预告片。
 //
-// The cut is data, at the top, so it can be argued with. Everything below it is
-// mechanical: pull each in-point out of its take, re-encode all of them to one
-// format so the concat demuxer will accept them, join, and lay the title over
-// the tail.
+// 剪辑是数据，放在顶部，以便可以被讨论。其下的一切都是机械的：
+// 从每个 take 中取出入点，把它们全部转码为一种格式让 concat demuxer 接受，
+// 拼接，并把标题铺在结尾上。
 //
 // The title is rendered by the *game*, not by ffmpeg — this build has no
 // drawtext filter, and more to the point the boot overlay is already the right

@@ -7,16 +7,15 @@ import {
 import { LOGD_V_PARS, LOGD_V, LOGD_F_PARS, LOGD_F } from '../gfx/glsl/noise.js';
 
 /* ============================================================================
-   PALE SEEKER — the hull.
+   苍白探寻者 —— 船壳。
 
-   A long-duration survey vessel, modelled in metres and scaled to world units
-   (1 unit = 1 km) at the very end. Read the silhouette front to back:
+   一艘长期任务勘测船，以米建模，在最末缩放到世界单位（1 单位 = 1 公里）。
+   从前往后读这条轮廓：
 
-     hammerhead sensor prow · lit cockpit · truss neck · pressure hull ·
-     swept radiator vanes · dorsal sail · engine outriggers · a survey dish
-     offset to port
+     锤头状传感器舰艏 · 亮着的驾驶舱 · 桁架颈 · 增压船壳 ·
+     后掠散热鳍 · 背部帆翼 · 引擎外支架 · 一座偏向左舷的勘测碟
 
-   Four rules shape it.
+   四条规则塑造了它。
 
    **Silhouette first.** At the distance the chase camera actually sits, the
    hull is a few hundred pixels wide and every surface detail is sub-pixel. What

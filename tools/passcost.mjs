@@ -1,4 +1,4 @@
-// Where does the frame go? Toggles individual passes and measures the delta.
+// 帧花在了哪里？开关单个趟并测量差值。
 //   node tools/passcost.mjs [url] [--webkit] [--w 1512] [--h 945] [--dpr 2]
 import { chromium, webkit } from 'playwright';
 const args = process.argv.slice(2);

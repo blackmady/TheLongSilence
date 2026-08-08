@@ -1,9 +1,8 @@
-// Reproduce a real Retina laptop, not a 720p test window.
+// 复现一台真正的 Retina 笔记本，而非 720p 测试窗口。
 //
-// The suites run at deviceScaleFactor 1 on a small viewport, which is about a
-// megapixel. A 14" MacBook at default scaling is 1512x945 CSS at DPR 2 — 5.7
-// megapixels, six times the fill. This samples fps AND the renderer's own
-// pixelRatio over time, because the dynamic-resolution controller can quietly
+// 各套件在小视口、deviceScaleFactor 1 下运行，约一兆像素。一台 14" MacBook
+// 在默认缩放上是 DPR 2 的 1512x945 CSS——5.7 兆像素，六倍填充。本脚本随时间
+// 采样 fps 以及渲染器自身的 pixelRatio，因为动态分辨率控制器会悄悄
 // trade the image away to hold frame rate.
 //
 //   node tools/perfprobe.mjs [url] [--w 1512] [--h 945] [--dpr 2] [--secs 24]

@@ -1,147 +1,96 @@
-# THE LONG SILENCE
+# 漫长沉默
 
-A procedural space-exploration game that runs in a browser tab. WebGL2, no
-assets — every star, world, ring system, nebula and derelict is generated from
-a seed and shaded by hand-written GLSL.
+一款在浏览器标签页中运行的程序化太空探索游戏。WebGL2，零美术资产——每一颗恒星、星球、环系、星云与废墟都由种子生成，并由手写的 GLSL 着色。
 
 ```
 npm install
 npm run dev        # http://localhost:5173
-npm run build      # static bundle in dist/
+npm run build      # 静态打包到 dist/
 ```
 
 ---
 
-## The game
+## 游戏
 
-Forty thousand years ago nine hundred inhabited worlds inside an eighty
-light-year volume fell silent in four days. No debris, no radiation signature,
-no sign of violence. The Choir left their cities lit, their orbits tidy, their
-archives open — and seven instruments standing in seven systems.
+四万年前，一片横跨八十光年的空间内，九百个有人居住的世界在四天内归于沉寂。没有残骸，没有辐射特征，没有任何暴力的迹象。合唱团让他们的城市灯火通明、轨道井井有条、档案门户大开——并在七个星系中各留下一件乐器。
 
-You fly the survey vessel *Pale Seeker*. Chart systems, scan what you find,
-and attune to the Resonators; each one yields a Canto and pushes the drive a
-little further. All seven opens the Aperture.
+你驾驶着勘测船*苍白探寻者*。测绘星系、扫描你的发现、调谐共鸣器；每一件共鸣器都会产出一段圣歌，并把跃迁引擎向前推进一步。集齐七件，便能打开孔洞。
 
-### Controls
+### 操作
 
-| | Desktop | Touch |
+| | 桌面 | 触屏 |
 |---|---|---|
-| Steer | mouse (click to capture) or arrow keys | left stick |
-| Roll | `Q` / `E` | right stick, horizontal |
-| Throttle | `W` / `S`, or scroll | right stick vertical, or `+` / `−` |
-| Boost | `Shift` | `BST` |
-| Scan | hold `F` | hold `SCAN` |
-| Land / lift off | `L` | — |
-| Fold drive | `J` | `FOLD` |
-| Star map | `M` | `MAP` |
-| Archive | `Tab` | `ARC` |
-| Full stop | `X` | — |
-| Camera | `V` | — |
-| Frame stats | `P` | — |
+| 转向 | 鼠标（点击捕获）或方向键 | 左摇杆 |
+| 翻滚 | `Q` / `E` | 右摇杆，水平 |
+| 油门 | `W` / `S`，或滚轮 | 右摇杆垂直，或 `+` / `−` |
+| 加速 | `Shift` | `BST` |
+| 扫描 | 按住 `F` | 按住 `SCAN` |
+| 降落 / 起飞 | `L` | — |
+| 跃迁引擎 | `J` | `FOLD` |
+| 星图 | `M` | `MAP` |
+| 档案 | `Tab` | `ARC` |
+| 全停 | `X` | — |
+| 视角 | `V` | — |
+| 帧率统计 | `P` | — |
 
-Fold speed scales with distance from the nearest mass, so an approach
-decelerates itself and drops you out just clear of the surface. Interstellar
-transit is initiated from the star map and costs drive charge by distance.
+跃迁速度随与最近质量体的距离缩放，因此接近过程会自动减速，并恰好在掠过地表之前将你弹出。星际航行从星图上发起，按距离消耗跃迁充能。
 
 ---
 
-## How it renders
+## 渲染方式
 
-**Scale and precision.** One world unit is one kilometre. Systems span millions
-of units while the ship is 0.1 units long, so the world uses a *floating
-origin* — the ship sits at (0,0,0) and everything else is positioned relative
-to it each frame — plus a logarithmic depth buffer. Custom `ShaderMaterial`s
-opt into log depth by hand (`LOGD_*` chunks in `src/gfx/glsl/noise.js`); miss
-that and two concentric spheres z-fight into triangular confetti.
+**尺度与精度。** 一个世界单位是一公里。星系跨度数百万单位，而飞船只有 0.1 单位长，因此世界使用*浮动原点*——飞船固定在 (0,0,0)，其余一切每帧都相对它定位——并配合对数深度缓冲。自定义的 `ShaderMaterial` 通过手写 `LOGD_*` 块（位于 `src/gfx/glsl/noise.js`）选择对数深度；错过这一步，两个同心球体会锯齿交错成三角形碎屑。
 
-**Planets are baked, not evaluated.** Twenty-odd octaves of simplex per pixel
-per frame is not survivable on a phone, so each solid world is rendered once
-into a cubemap holding linear albedo in RGB and terrain height in A. The
-runtime shader is three texture taps for normals plus lighting. Cubemaps rather
-than equirectangular maps: no pole pinch, no seam. The nearest world gets
-re-baked at 1024²/face; everything else sits at 256².
+**行星是烘焙出来的，而非逐帧求值。** 每像素每帧二十多个八度的单纯形噪声不是手机能扛的，因此每颗固态世界只渲染一次到立方体贴图中，RGB 保存线性反照率，A 保存地形高度。运行时着色器只需三次纹理采样做法线，外加光照。用立方体贴图而非等距柱状图：没有极点扭曲，没有接缝。最近的世界以 1024²/面重新烘焙；其余一切保持在 256²。
 
-**Atmospheres are single-scattering raymarches** through a spherical shell in
-planet-radius object space, with Rayleigh coefficients set from real optical
-depths (~0.05/0.10/0.23 at zenith) and a soft planetary penumbra on the light
-ray so twilight fades instead of ending at a line.
+**大气是球壳内的单次散射光线步进**，运行在行星半径的对象空间中，瑞利系数取自真实光学深度（天顶约 0.05/0.10/0.23），并在光线路径上加入柔和的行星半影，让黄昏逐渐淡去而非戛然而止。
 
-**Auto exposure** runs entirely on the GPU: a 64² luminance reduction to 8² to
-1², then a ping-pong adaptation target. The metric is a *sqrt* mean — a log
-mean is the textbook choice but space frames are 90% black sky and the log of
-near-zero drags the average to nothing, blowing out every shot.
+**自动曝光完全在 GPU 上运行**：64² 亮度缩减到 8² 再到 1²，随后是乒乓适应的目标值。指标采用 *sqrt* 均值——对数均值是教科书选择，但太空画面 90% 是黑天，接近零的对数会把均值拖到空无一物，从而吹爆每一个镜头。
 
-**Post** is hand-rolled: bright prefilter → six-level dual-filter bloom with
-attenuated wide mips → anamorphic streak → god rays and lens ghosts → composite
-(radial blur, chromatic aberration inside the sampler, AgX tonemap, grain,
-dither) → FXAA.
+**后期为手搓**：高光预滤波 → 六层双滤波泛光（含衰减的宽 mip）→ 变形光晕 → 体积光与镜头鬼影 → 合成（径向模糊、采样器内色差、AgX 色调映射、颗粒、抖动）→ FXAA。
 
-**Performance** holds 60fps by trading resolution, never features: the engine
-watches frame time and moves the render scale between 0.62× and 2×.
+**性能**靠牺牲分辨率而非特性来维持 60fps：引擎监测帧时间，将渲染比例在 0.62× 与 2× 之间移动。
 
 ---
 
-## Layout
+## 布局
 
 ```
 src/
-  core/       Engine (renderer, quality tiers, frame loop), Input
-  gfx/        PostFX, Sky (nebula cubemap + HDR star field), cube baking,
-              greeble (the shared construction + surfacing kit), GLSL
-  world/      generate (seeded universe), Planet, Star, Surface (the ground),
-              Fleet (traffic), Station, Structures, Asteroids, Dust, shaders
-  ship/       Ship — procedural hull with injected panel-line PBR, flight model
-  game/       Game (world state, scanning, fold, floating origin), Director
-              (cutscenes), encounters, lore
-  ui/         HUD, Codex, StarMap, stylesheet
-  audio/      procedural WebAudio drone and engine
-tools/        browser verification: survey.mjs, play.mjs, probe.mjs, sheet.mjs
+  core/       Engine（渲染器、画质档位、帧循环）、Input
+  gfx/        PostFX、Sky（星云立方体贴图 + HDR 星空）、立方体烘焙、
+              greeble（共享的构造与蒙皮套件）、GLSL
+  world/      generate（种子化宇宙）、Planet、Star、Surface（地表）、
+              Fleet（交通）、Station、Structures、Asteroids、Dust、着色器
+  ship/       Ship —— 程序化船壳，带注入的板线 PBR 与飞行模型
+  game/       Game（世界状态、扫描、跃迁、浮动原点）、Director（过场）、
+              encounters、lore
+  ui/         HUD、Codex、StarMap、样式表
+  audio/      程序化 WebAudio 低鸣与引擎声
+tools/        浏览器验证：survey.mjs、play.mjs、probe.mjs、sheet.mjs
 ```
 
-**One kit builds everything.** `gfx/greeble.js` owns the plate-seam law, the
-weathering, the sun-bleaching, the grazing rim term and the five base materials,
-and the player's hull, every freighter, every station and every derelict are
-surfaced by it. Parts bake their transforms into their geometry and are welded
-per material, so panel lines run continuously across part boundaries and a
-hundred pieces cost six draws.
+**一套套件构建一切。** `gfx/greeble.js` 掌管板缝法则、风化、日晒褪色、掠射边缘项与五种基础材质；玩家的船壳、每一艘货船、每一座空间站与每一处废墟都由它蒙皮。零件把变换烘焙进几何体，并按材质焊接，因此板线在零件边界连续贯通，一百个零件只花六次绘制调用。
 
-**Traffic is on a schedule, not a simulation.** Craft follow analytic paths
-keyed to the clock, so they are exactly where they belong after a fold jump or a
-two-minute pause. Each carries a *beacon* — a quad sized from view depth to hold
-a constant few pixels — because sixty metres of hull four million kilometres
-away is far below one, and a moving spark is what makes a system read as busy.
+**交通按时刻表运行，而非模拟。** 飞行器沿锚定时钟的解析路径运动，因此跃迁之后或暂停两分钟之后，它们都精确位于该在的位置。每艘船都携带一个*信标*——一块按视野深度缩放的方块，以保持恒定几个像素——因为四百万公里外六十米长的船壳远低于一个像素，而一个移动的光点才让星系读起来热闹。
 
-**The ground is a separate scene.** Orbit needs a whole planet with no visible
-geometry; standing on one needs ten kilometres of terrain with no visible
-sphere. `world/Surface.js` is a radial grid whose rings grow exponentially,
-displaced by the same terrain law the orbital bake uses, bent down by the
-planet's real radius, and hazed by the same scattering coefficients as the
-atmosphere shell above it.
+**地面是独立的场景。** 环绕需要一整颗看不见几何体的行星；站在上面则需要十公里看不到球体的地形。`world/Surface.js` 是一个径向网格，环带呈指数增长，用轨道烘焙所采用的同一地形法则做位移，按行星的真实半径向下弯曲，并由上方大气壳层相同的散射系数罩上雾霭。
 
-## Verification
+## 验证
 
 ```
-node tools/play.mjs        # 17 interaction assertions (flight, scan, fold, jump)
-node tools/survey.mjs      # screenshots every set-piece, reports fps/draws
-node tools/probe.mjs "<js>" --shot out.png     # one expression, one frame
-node tools/sheet.mjs a.png b.png --out s.png   # contact sheet — judge a set at once
-node tools/levels.mjs shots/*.png              # tone statistics per frame
-node tools/judgeset.mjs                        # rebuild the review set in shots/judge/
+node tools/play.mjs        # 17 项交互断言（飞行、扫描、跃迁、跳跃）
+node tools/survey.mjs      # 每个场景截图，报告 fps/绘制次数
+node tools/probe.mjs "<js>" --shot out.png     # 一个表达式，一帧画面
+node tools/sheet.mjs a.png b.png --out s.png   # 联络表——一次评估一整组
+node tools/levels.mjs shots/*.png              # 每帧色调统计
+node tools/judgeset.mjs                        # 重建 shots/judge/ 中的评审集
 ```
 
-`levels.mjs` is the one that stops arguments. "It looks flat" is not
-actionable; "0.00% of pixels clip and the 99th percentile is 165" is, and that
-is exactly what the game measured before the highlight range was fixed.
+`levels.mjs` 是终结争论的那一个。“看起来平”不是可执行的反馈；“0.00% 的像素溢出、99 百分位是 165”才是——而这正是高光范围被修复前游戏实测的数字。
 
-Every tool boots through `tools/boot.mjs`, which exists because the dev server
-hot-reloads on any source edit: a capture that started before the reload
-finishes happily and screenshots the title card, with a plausible frame rate
-printed next to it. It verifies the overlay is actually gone and starts over if
-it is not, and the multi-shot tools re-check between shots.
+每个工具都通过 `tools/boot.mjs` 启动，它存在是因为开发服务器会在任何源码编辑时热重载：在重载前开始的捕获会愉快地完成并截下标题卡，旁边印着一个看似合理的帧率。它验证覆盖层确实消失，若未消失则重新开始；多镜头工具会在各镜头之间复查。
 
-Phones are turned away at the door with a short message rather than served a
-reduced build — every feature worth looking at here is one a handset cannot
-afford, and a bad first impression is worse than none.
+手机用户会在门口收到一句简短讯息，而不是被奉上一个降级版——这里每一项值得一看的特性都是手持设备负担不起的，而糟糕的第一印象比没有更糟。
 
-Both drive a real headed Chromium with GPU rasterisation against `npm run dev`.
+两者都在 `npm run dev` 之上驱动真实的有头 Chromium，启用 GPU 光栅化。

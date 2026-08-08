@@ -1,8 +1,8 @@
-// Boot-and-fly smoke test against any URL — the production bundle, or the
-// deployed site. Minification and asset-path rewriting break things the dev
-// server never shows, so this runs against the built artifact, not the source.
+// 针对任意 URL 的启动即飞行冒烟测试——生产打包，或已部署站点。
+// 压缩与资产路径重写会破坏开发服务器从不暴露的东西，
+// 因此它针对构建产物运行，而非源码。
 //
-//   node tools/smoke.mjs [url]        default http://localhost:4173/
+//   node tools/smoke.mjs [url]        默认 http://localhost:4173/
 import { chromium } from 'playwright';
 
 const URL = process.argv[2] || 'http://localhost:4173/';
