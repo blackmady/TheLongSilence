@@ -1,9 +1,8 @@
 /* ============================================================
-   THE LONG SILENCE — screen-space layer
+   漫长沉默 —— 屏幕空间图层
 
-   The dashboard carries the instruments. This file styles only what a
-   person carries in their head: what they are looking at, what they
-   were told, and what they can reach.
+   仪表盘承载着仪表。这个文件只样式化一个人脑中携带的东西：
+   他们在看什么、被告知了什么、以及他们能够到什么。
    ============================================================ */
 :root{
   --cy:#8fe4ff;
@@ -14,9 +13,8 @@
   --line:rgba(143,228,255,.22);
   --line-s:rgba(143,228,255,.10);
   --txt:rgba(214,240,252,.92);
-  /* Was .48. Every secondary label in the archive and the star map is this
-     colour at 8-9px with heavy tracking; at .48 on a near-black panel the
-     whole UI read as placeholder text. */
+  /* 过去是 .48。档案与星图中的每个次要标签都以 8-9px 加宽字距使用此色；
+     在近黑面板上 .48 的它让整个 UI 读作占位文字。 */
   --dim:rgba(168,204,222,.66);
   --mono:ui-monospace,"SF Mono",SFMono-Regular,"JetBrains Mono","Roboto Mono",Menlo,Consolas,monospace;
   --safe-t:env(safe-area-inset-top,0px);
@@ -34,7 +32,7 @@ canvas#scene{position:fixed;inset:0;width:100%;height:100%;display:block;z-index
 .hidden{display:none!important}
 button{font-family:inherit;color:inherit;background:none;border:none;cursor:pointer}
 
-/* ============================ BOOT ============================ */
+/* ============================ 启动 ============================ */
 #boot{position:fixed;inset:0;z-index:200;display:grid;place-items:center;
   background:radial-gradient(120% 90% at 50% 42%,rgba(4,9,15,.70) 0%,rgba(2,5,10,.88) 48%,rgba(0,0,0,.96) 100%);
   backdrop-filter:blur(2px) saturate(.85);-webkit-backdrop-filter:blur(2px) saturate(.85);
@@ -66,18 +64,18 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
 .boot-start[hidden]{display:none}
 .boot-legal{margin-top:24px;font-size:9px;letter-spacing:.2em;color:rgba(160,196,214,.28)}
 
-/* ============================ OVERLAY ============================ */
+/* ============================ 覆盖层 ============================ */
 #hud{position:fixed;inset:0;z-index:20;pointer-events:none;opacity:0;transition:opacity 1.4s ease .2s}
 #hud.on{opacity:1}
 
-/* One shape language for the whole layer: a cut corner top-right and
+/* 整层只有一种形状语言：右上角切角，以及
    bottom-left. It costs nothing and it is the difference between "a div with a
    background colour" and something that looks machined. */
 #hud{--cut:10px;
   --slate:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),
                   100% 100%,var(--cut) 100%,0 calc(100% - var(--cut)))}
 
-/* reticle */
+/* 准星 */
 #reticle{position:absolute;left:50%;top:50%;width:104px;height:104px;transform:translate(-50%,-50%);
   opacity:.8;animation:retIn .4s ease}
 @keyframes retIn{from{opacity:0;transform:translate(-50%,-50%) scale(1.25)}}
@@ -87,7 +85,7 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
 .r-dot{fill:var(--am);filter:drop-shadow(0 0 4px var(--am))}
 .r-arc{fill:none;stroke:var(--am);stroke-width:2.6;filter:drop-shadow(0 0 5px rgba(255,196,138,.75))}
 
-/* canopy-projected contact markers.
+/* 投影在座舱盖上的接触标记。
    Corner brackets rather than a ring: brackets read as a targeting system
    locking on, and they stay legible against a bright planet where a thin
    dashed circle disappears. */
@@ -113,7 +111,7 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
 .mk.sel .mk-br{stroke:var(--cy);stroke-width:1.9}
 .mk.sel .mk-lbl{color:#e8f8ff}
 
-/* message log */
+/* 消息日志 */
 #log{position:absolute;left:calc(26px + var(--safe-l));bottom:calc(88px + var(--safe-b));
   width:330px;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
 .lg{position:relative;font-size:9.5px;letter-spacing:.18em;color:var(--dim);
@@ -131,75 +129,70 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
 @keyframes lgIn{to{opacity:1;transform:none}}
 @keyframes lgOut{to{opacity:0;transform:translateX(-14px)}}
 
-/* narrative subtitle */
-/* Twice moved, and the second move was into a different obstacle.
+/* 叙事字幕 */
+/* 移动过两次，第二次撞进了不同的障碍物。
 
-   At 46% it crossed the middle of the windscreen and cut the planet in half.
-   Moving it to 19% fixed that — and then the cockpit was reframed so the dash
+   在 46% 时它横穿挡风玻璃中部，把行星切成两半。移到 19% 解决了这个问题——
+   随后驾驶舱被重新取景，仪表板
    fills the lower half, and 19% landed squarely on the main display, washing a
    soft band across the one panel the pilot reads numbers off.
 
    4% clears both: below the display, over the pedestal, which is the darkest
    and least informative band in the frame. Dialogue should never cross either
    the thing it is talking about or the thing you are flying with. */
-/* The stack carries the anchoring; the subtitle is just its last child, so it
-   still bottoms out at the 4% the comment above argues for. The prompt rides
-   on top of it and moves with it — see index.html. */
+/* 堆栈承载着锚定；字幕只是它的最后一个子元素，因此它仍然落在上面注释
+   论证过的 4% 处。提示骑在它上面并随它移动——见 index.html。 */
 #narrStack{position:absolute;left:50%;bottom:calc(4% + var(--safe-b));transform:translateX(-50%);
   display:flex;flex-direction:column;align-items:center;gap:14px;pointer-events:none}
 #narr{width:min(680px,82vw);text-align:center;pointer-events:none}
 #narrText{font-size:13px;line-height:1.9;letter-spacing:.14em;color:rgba(234,247,255,.96);
   padding:16px 30px;
-  /* A soft elliptical scrim with no hard edge anywhere — a rectangular plate
-     over a starfield reads as a UI panel pasted on the render. */
+  /* 柔和的椭圆遮罩，任何地方都没有硬边——星场上的矩形板会读作贴到渲染
+     上的 UI 面板。 */
   background:radial-gradient(66% 150% at 50% 50%,rgba(3,8,14,.86) 0%,rgba(3,8,14,.40) 42%,transparent 72%);
   text-shadow:0 1px 3px #000,0 2px 18px rgba(0,0,0,.95),0 0 42px rgba(0,0,0,.9);
   opacity:0;transform:translateY(6px);transition:opacity .8s,transform .8s}
 #narrText.on{opacity:1;transform:none}
-/* Block, not inline-block: the speaker is a caption above the line, and inline
-   put the name in the middle of the sentence. width:fit-content keeps the rule
-   under the name rather than across the whole subtitle. */
+/* Block，而非 inline-block：说话者是行上方的题注，inline 会把名字放进
+   句子中间。width:fit-content 让规则线只在名字下方，而非横贯整个字幕。 */
 #narrText .who{display:block;width:fit-content;margin:0 auto 11px;
   font-size:9px;letter-spacing:.32em;color:var(--am);
   padding-bottom:6px;border-bottom:1px solid rgba(255,196,138,.28)}
 
-/* interaction prompt */
-/* 16% put this in the middle of the main display; 11.5% cleared the display
-   but landed on the subtitle instead. It is a child of #narrStack now, so it
-   has no anchoring of its own and cannot collide with the line below it. */
+/* 交互提示 */
+/* 16% 让它落进主显示中间；11.5% 让开了显示，却又落到了字幕上。它现在是
+   #narrStack 的子元素，因此没有自己的锚定，也不会与下方那行冲突。 */
 #prompt{display:flex;align-items:center;gap:13px;padding:8px 20px 8px 9px;
   background:linear-gradient(90deg,rgba(8,17,26,.62),rgba(8,17,26,.18));
   clip-path:var(--slate);animation:promptIn .26s cubic-bezier(.2,.8,.2,1)}
-/* translateY, not translate(-50%,…): the -50% centring lives on the stack now,
-   and re-applying it here would slide the prompt half its width left as it
-   animates in. */
+/* 用 translateY，不用 translate(-50%,…)：-50% 居中现在由堆栈承担，
+   在这里重复应用会让提示在动画进入时向左滑出自身一半宽度。 */
 @keyframes promptIn{from{opacity:0;transform:translateY(8px)}}
 #prompt b{position:relative;display:grid;place-items:center;min-width:30px;height:30px;padding:0 8px;
   border:1px solid rgba(143,228,255,.62);
   background:linear-gradient(180deg,rgba(22,44,60,.92),rgba(8,18,27,.92));
   font-size:11.5px;font-weight:400;letter-spacing:.08em;color:#eaf8ff;
   box-shadow:0 0 22px rgba(143,228,255,.22),inset 0 1px 0 rgba(190,235,255,.16)}
-/* a slow ring breathing out of the key: "this is pressable" without a label */
+/* 一圈从按键缓缓呼出的光环：“这个可以按”，无需标签 */
 #prompt b::after{content:'';position:absolute;inset:-4px;border:1px solid rgba(143,228,255,.45);
   animation:keyPulse 2.3s cubic-bezier(.3,.7,.3,1) infinite}
 @keyframes keyPulse{0%{opacity:.5;transform:scale(1)}70%,100%{opacity:0;transform:scale(1.35)}}
 #prompt span{font-size:12px;letter-spacing:.24em;color:#eef8ff;text-shadow:0 2px 12px #000}
 #prompt em{font-style:normal;font-size:9.5px;letter-spacing:.16em;color:var(--dim)}
 
-/* contextual keys */
+/* 情境按键 */
 #hints{position:absolute;left:50%;bottom:calc(14px + var(--safe-b));transform:translateX(-50%);
   display:flex;gap:7px;flex-wrap:wrap;justify-content:center;max-width:92vw}
-/* The label was 46% of a pale blue over a 46%-opaque chip — about a fifth of
-   the contrast it needed against a bright windscreen, so the one line telling
-   a new player which keys exist was the least legible thing on screen. The
-   chip carries the contrast now and the text sits at a readable weight. */
+/* 标签曾是 46% 不透明度色块上的 46% 淡蓝——在明亮挡风玻璃的衬托下只有
+   所需对比度的五分之一，于是告诉新玩家有哪些按键的那一行，竟是屏幕上最
+   难读的东西。现在由色块承载对比度，文字落在可读的字重上。 */
 #hints span{display:inline-flex;align-items:center;gap:7px;padding:4px 11px;
   background:rgba(6,13,20,.68);border:1px solid rgba(120,170,200,.14);
   clip-path:polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,5px 100%,0 calc(100% - 5px));
   font-size:9.5px;letter-spacing:.18em;color:rgba(186,214,230,.78)}
 #hints kbd{font:inherit;font-size:9.5px;letter-spacing:.1em;color:rgba(158,234,255,.96)}
 
-/* fold banner */
+/* 跃迁横幅 */
 #foldOverlay{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:12px;
   opacity:0;transition:opacity .4s;
   background:radial-gradient(62% 62% at 50% 50%,transparent 42%,rgba(0,0,0,.42) 100%)}
@@ -212,11 +205,10 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
 #alert{position:absolute;left:50%;top:calc(20% + var(--safe-t));transform:translateX(-50%);
   font-size:12px;letter-spacing:.3em;color:var(--rd)}
 
-/* ============================ PANELS ============================ */
-/* Opening a panel is a shot in its own right — it lands on camera in the
-   trailer and it is the only transition the flat UI has. So the ground fades
-   in first and the contents rise into it a beat later, with a hairline wiping
-   across the header, instead of the whole thing appearing at once. */
+/* ============================ 面板 ============================ */
+/* 打开面板本身就是一记镜头——它在预告片中落在镜头前，也是扁平 UI 唯一的
+   转场。因此背景先淡入，内容稍后一拍升入其中，一道发丝线扫过头栏，
+   而不是整件事同时出现。 */
 .panel{position:fixed;inset:0;z-index:60;background:rgba(2,6,11,.88);
   backdrop-filter:blur(22px) saturate(.7);-webkit-backdrop-filter:blur(22px) saturate(.7);
   display:flex;flex-direction:column;animation:pIn .34s cubic-bezier(.2,.8,.2,1)}
@@ -239,7 +231,7 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
 .p-close:hover{color:var(--cy)}
 .p-body{flex:1;min-height:0;overflow:hidden}
 
-/* archive */
+/* 档案 */
 .codex-body{display:grid;grid-template-columns:224px 1fr}
 .codex-nav{overflow-y:auto;border-right:1px solid var(--line-s);padding:14px 0 40px}
 .cx-grp{font-size:9.5px;letter-spacing:.26em;color:var(--dim);padding:16px 26px 7px}
@@ -262,7 +254,7 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
   color:rgba(255,220,190,.85);font-style:italic}
 .cx-empty{color:var(--dim);font-size:11px;letter-spacing:.16em;padding-top:40px}
 
-/* star map */
+/* 星图 */
 .map-body{position:relative;display:grid;grid-template-columns:1fr 280px}
 #mapCanvas{width:100%;height:100%;display:block;touch-action:none}
 .map-side{border-left:1px solid var(--line-s);padding:26px 24px;overflow-y:auto}
@@ -278,7 +270,7 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
 .ms-go:disabled{opacity:.3;cursor:default}
 .ms-note{margin-top:14px;font-size:9px;letter-spacing:.14em;color:var(--dim);line-height:1.7}
 
-/* ============================ TOUCH ============================ */
+/* ============================ 触屏 ============================ */
 #touchUI{position:fixed;inset:0;z-index:30;pointer-events:none}
 .stick{position:absolute;bottom:calc(28px + var(--safe-b));width:118px;height:118px;border-radius:50%;
   border:1px solid rgba(143,228,255,.16);background:rgba(6,14,22,.22);pointer-events:auto;
@@ -301,12 +293,12 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
   font-size:16px;color:rgba(190,226,240,.75);border-radius:2px;backdrop-filter:blur(4px)}
 .tt:active{background:rgba(143,228,255,.2);color:#fff}
 
-/* ============================ PERF ============================ */
+/* ============================ 性能 ============================ */
 #perf{position:fixed;left:6px;top:6px;z-index:120;font-size:9px;letter-spacing:.1em;
   color:rgba(143,228,255,.45);pointer-events:none;white-space:pre;display:none}
 #perf.on{display:block}
 
-/* ============================ RESPONSIVE ============================ */
+/* ============================ 响应式 ============================ */
 @media (max-width:1100px){
   .codex-body{grid-template-columns:190px 1fr}
   .map-body{grid-template-columns:1fr 250px}
@@ -338,7 +330,7 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
   .p-head{padding-top:calc(12px + var(--safe-t))}
 }
 
-/* portrait phone */
+/* 竖屏手机 */
 @media (max-width:760px) and (orientation:portrait){
   #touchBtns{right:calc(8px + var(--safe-r));gap:7px}
   .tb{width:52px;height:32px;font-size:8.5px}
@@ -351,7 +343,7 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
   .stick{width:104px;height:104px}
 }
 
-/* landscape phone */
+/* 横屏手机 */
 @media (max-height:520px){
   #log{left:calc(120px + var(--safe-l));top:calc(12px + var(--safe-t));bottom:auto;
     width:min(210px,30vw)}
@@ -393,7 +385,7 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
 @media (hover:none){ #hints{display:none} }
 
 
-/* ------------------------------------------------------------- cinematic
+/* ------------------------------------------------------------- 电影化
    Bars, and a title that arrives a beat after the cut. The delay matters: a
    card that appears on the same frame as the shot reads as a UI element, and
    one that fades up half a second later reads as a title. */
@@ -426,7 +418,7 @@ button{font-family:inherit;color:inherit;background:none;border:none;cursor:poin
 }
 #hud.cine { opacity: 0; transition: opacity .35s ease; }
 
-/* ------------------------------------------------------- desktop-only gate */
+/* ------------------------------------------------------- 仅限桌面 */
 #boot.gate .boot-inner { max-width: 34rem; text-align: center; }
 #boot .boot-gate {
   margin: 2.2rem 0 1.6rem;

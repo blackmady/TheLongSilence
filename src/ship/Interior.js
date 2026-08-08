@@ -14,9 +14,8 @@ import { makeInteriorMaterials, dressedVariant, withKitAo, emissive, emissiveWel
    └──────────────┴──────────────┴──────────────────────────┘
       -7.6 .. -3.4    -3.4 .. 0.6      0.6 .. 7.2
 
-   Everything is parented to the ship, so with the floating origin in play the
-   local coordinates stay in the range of a few metres and precision is exact.
-   The whole group is scaled to world units at the end (1 unit = 1 km).
+   一切都挂靠在飞船上，因此在浮动原点生效时，局部坐标保持在几米的范围内，
+   精度精确。整个组在最后缩放到世界单位（1 单位 = 1 公里）。
    ========================================================================== */
 
 // The interior is rendered in its own pass with its own camera, so it stays at
@@ -1504,7 +1503,7 @@ export function buildInterior(assets = {}) {
 
 
   stations.push({
-    id: 'seat', label: 'TAKE THE HELM', hint: 'Fly the ship',
+    id: 'seat', label: '接管驾驶席', hint: '驾驶飞船',
     // Beside the seat, not behind it: standing on the backrest side meant the
     // sit transition had to pass straight through the shell.
     pos: new THREE.Vector3(0.62, 1.0, -4.72), radius: 1.25,
@@ -1613,7 +1612,7 @@ export function buildInterior(assets = {}) {
      group instead, the whole table is six. */
   mergeStatic(nav);
   stations.push({
-    id: 'nav', label: 'STELLAR CARTOGRAPHY', hint: 'Plot a fold',
+    id: 'nav', label: '星系制图', hint: '规划一次跃迁',
     pos: new THREE.Vector3(0, 1.0, 1.55), radius: 1.15,
     look: new THREE.Vector3(0, 1.1, 2.6),
     holo: nav,
@@ -1690,7 +1689,7 @@ export function buildInterior(assets = {}) {
     add(sbox(0.024, 0.004, 0.640, emissive(0x9fd8ff, 0.75), ...A(-0.145, 0.766, 0.069)));
   }
   stations.push({
-    id: 'archive', label: 'ARCHIVE', hint: 'Review discoveries and records',
+    id: 'archive', label: '档案', hint: '查看发现与记录',
     pos: new THREE.Vector3(-HW + 1.15, 1.0, 0.95), radius: 1.0,
     look: new THREE.Vector3(-HW + 0.3, 1.35, 0.95),
   });
@@ -1753,7 +1752,7 @@ export function buildInterior(assets = {}) {
      centreline, high, and raking across the sockets and the trunking. */
   spot(-0.95, 2.16, 6.05, -0.10, 1.10, 6.95, 0xffd6b0, 30, 0.85, 1024);
   stations.push({
-    id: 'resonance', label: 'RESONANCE CHAMBER', hint: 'The Cantos',
+    id: 'resonance', label: '共鸣室', hint: '圣歌',
     pos: new THREE.Vector3(0, 1.0, 5.85), radius: 1.1,
     look: new THREE.Vector3(0, 1.3, 6.9),
   });
@@ -1835,7 +1834,7 @@ export function buildInterior(assets = {}) {
     pl(HW - 0.54, 0.96, 4.66, 0xbcd8f0, 2.2, 1.6);
   }
   stations.push({
-    id: 'port', label: 'OBSERVATION PORT', hint: 'Look outside',
+    id: 'port', label: '观测舷窗', hint: '看向外面',
     pos: new THREE.Vector3(HW - 1.0, 1.0, 4.3), radius: 0.9,
     look: new THREE.Vector3(HW + 4, 1.35, 4.3),
   });

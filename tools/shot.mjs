@@ -1,8 +1,7 @@
-// Browser verification harness.
+// 浏览器验证工具。
 //   node tools/shot.mjs <name> [--w 1600] [--h 900] [--wait 9000] [--script file.js]
-// Launches headed Chromium with real GPU rasterisation, waits for the game to
-// boot, optionally runs a driver script inside the page, then screenshots and
-// dumps console output + an fps sample.
+// 启动带真实 GPU 光栅化的有头 Chromium，等待游戏启动，可选地在页面内
+// 运行一个驱动脚本，然后截图并转储控制台输出 + 一段 fps 采样。
 import { chromium } from 'playwright';
 import fs from 'node:fs';
 import path from 'node:path';

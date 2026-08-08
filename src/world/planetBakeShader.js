@@ -1,16 +1,16 @@
 import { NOISE } from '../gfx/glsl/noise.js';
 
 /* ============================================================================
-   Planet surface baking.
+   行星表面烘焙。
 
-   Evaluating 20+ octaves of simplex per pixel per frame is not survivable on a
-   phone, so every solid world is baked once into a cubemap:
+   每像素每帧求值 20+ 个八度的单纯形噪声不是手机能扛的，因此每颗固态世界
+   只烘焙一次到立方体贴图中：
 
-        RGB = linear albedo      A = terrain height (0..1)
+        RGB = 线性反照率      A = 地形高度（0..1）
 
-   A cubemap (rather than equirect) means no pole pinching and no seam, and the
-   runtime shader gets surface normals for free from three extra texture taps.
-   Close-up detail beyond the baked resolution is re-synthesised at runtime.
+   立方体贴图（而非等距柱状）意味着没有极点扭曲、没有接缝，运行时着色器
+   通过三次额外纹理采样免费获得表面法线。超出烘焙分辨率的近景细节在运行时
+   重新合成。
    ========================================================================== */
 
 export const PLANET_TYPES = {

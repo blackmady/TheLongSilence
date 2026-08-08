@@ -6,28 +6,25 @@ import { LOGD_V_PARS, LOGD_V } from '../gfx/glsl/noise.js';
 import { kelvinColor } from '../world/generate.js';
 
 /* ============================================================================
-   Stellar cartography, as an object in the room.
+   星系制图，作为房间里的一件物体。
 
-   The first pass at this was fourteen dots over a table, which is a diagram,
-   not a chart — the eye had nothing to hold on to, and it read as low detail
-   however sharp the pixels actually were. Density is what sells a hologram, so
-   the volume now carries, back to front:
+   第一版只是桌子上方漂浮的十四个点——那是示意图，不是星图——目光无所依托，
+   无论像素多么锐利，读起来都是低细节。密度才让全息图成立，因此现在这个
+   体积从前到后承载着：
 
-     · a field of ~900 background stars in a lens-shaped disc, so the galaxy has
-       substance for the fourteen playable systems to sit inside;
-     · dust bands — broad, very dim additive sheets rotating against each other,
-       giving the volume interior structure instead of empty air;
-     · a polar survey grid on the base plane, dense at the hub and fading out,
-       with a sweep arm that rotates like a scanning radar;
-     · the systems themselves: cores coloured by temperature, each dropping a
-       stalk to a footprint ring on the grid, which is what turns a floating dot
-       into a *position*;
-     · lanes between near neighbours, so the scatter reads as a network;
-     · a label on every system, and a bracket reticle on the selection.
+     · 约 900 颗背景恒星构成的一片透镜形星盘，让银河系有了实体，
+       十四颗可游玩的星系得以置身其中；
+     · 尘埃带——宽大、极暗的叠加薄层，彼此反向旋转，给体积内部以结构，
+       而非空无一物；
+     · 基座平面上极坐标式的勘测网格，枢纽处密集、向外淡出，
+       一条像扫描雷达那样旋转的扫掠臂；
+     · 星系本身：按温度着色的核心，每颗都垂下一根茎杆落到网格上的足迹环，
+       这正是把一个漂浮的点变成*位置*的东西；
+     · 近邻之间的航道，让散点读作一张网络；
+     · 每个星系一个标签，选择框上有一副括形准星。
 
-   The galaxy generates as a 2D scatter, so height comes from the system seed.
-   It is not physics, it is parallax: a flat sheet of dots reads as a diagram,
-   and the same dots given depth read as a volume.
+   银河系以二维散点生成，因此高度来自星系种子。这不是物理，这是视差：
+   一层扁平的圆点读作示意图，而同样的圆点被赋予深度后，读作一个体积。
    ========================================================================== */
 
 const TABLE = new THREE.Vector3(0, 1.17, 2.6);
@@ -36,21 +33,17 @@ const LIFT = 0.235;          // vertical spread of the volume
 const DISC = 0.50;           // radius of the base grid
 const DEPLOY = 1.06;         // deployed size, relative to the table
 
-/* Radiance.
+/* 辐射度。
  *
- * The chart was authored under unity. `holoMat` blends additively with
- * SrcAlpha, so what lands in the buffer is colour * alpha * alpha, and with
- * alpha held under unity except on the build-up band — 0.14 to 0.26 for
- * anything structural — a grid line arrived at four hundredths of a unit of
- * scene radiance. This codebase needs of the order of 120 to reach white.
- * The whole object was therefore *present and invisible*: barely there at all,
- * a few faint white aliased wisps, which is what a
- * sub-unit additive line looks like once auto-exposure has opened up to find
- * it and the room behind it has come up with it.
+ * 这张星图是以“单位”为基准创作的。`holoMat` 以 SrcAlpha 做加法混合，
+ * 因此落进缓冲的是 颜色 * alpha * alpha，而当 alpha 被压制在单位以下
+ * （结构类元素为 0.14 到 0.26），一条网格线到达时只有场景辐射度的百分之四。
+ * 本代码库需要约 120 才能达到白色。于是整个物体*在场却不可见*：几乎毫无
+ * 存在感，几缕淡白的锯齿状游丝——一旦自动曝光为了寻找它而打开、其后的
+ * 房间也随之亮起，亚单位加法线条就是这副模样。
  *
- * These are the gains that put each element in a real HDR range, and they are
- * spread over four stops rather than flat, because a chart in which every line
- * is the same value is the diagram problem again in a different form.
+ * 这些增益把每个元素放进真实的 HDR 区间，并且跨越四个曝光档位而非平铺，
+ * 因为每条线都同样亮的星图，不过是换了形式的示意图问题。
  */
 const G_GRID = 8;            // base plate, rings, spokes: the quiet layer
 const G_STRUCT = 17;         // lanes, stalks, footprints
@@ -488,7 +481,7 @@ export class HoloMap {
 
       const label = labelPlane(
         sys.visited ? sys.name.toUpperCase() : sys.designation,
-        sys.visited ? `${sys.starClass.cls}-CLASS` : 'UNCHARTED',
+        sys.visited ? `${sys.starClass.cls} 型` : '未测绘',
         sys.visited ? '#dff4ff' : 'rgba(160,200,220,0.8)');
       label.position.set(0.072, 0.021, 0);
       n.add(label);
@@ -678,31 +671,31 @@ export class HoloMap {
 
     this.info.draw((c) => {
       const w = c.w;
-      c.text('STELLAR CARTOGRAPHY', 20, 28, { size: 12, color: DIM, track: 3 });
+      c.text('星系制图', 20, 28, { size: 12, color: DIM, track: 3 });
       c.line(20, 37, w - 20, 37, DIM, 1, 0.4);
-      c.text(s.visited ? s.name.toUpperCase() : 'UNCHARTED', 20, 74,
+      c.text(s.visited ? s.name.toUpperCase() : '未测绘', 20, 74,
         { size: 28, color: s.visited ? '#eafaff' : DIM, track: 0.6 });
-      c.text(`${s.designation}  ·  ${s.starClass.cls}-CLASS`, 20, 98,
+      c.text(`${s.designation}  ·  ${s.starClass.cls} 型`, 20, 98,
         { size: 13, color: AM, track: 1.6 });
 
       const row = (label, val, y, col = '#dff4ff') => {
         c.text(label, 20, y, { size: 13, color: DIM, track: 2 });
         c.text(val, w - 20, y, { size: 15, color: col, align: 'right' });
       };
-      row('DISTANCE', `${dist.toFixed(1)} ly`, 140);
-      row('FOLD COST', `${Math.round(cost * 100)}%`, 168,
+      row('距离', `${dist.toFixed(1)} 光年`, 140);
+      row('跃迁消耗', `${Math.round(cost * 100)}%`, 168,
         cost > g.ship.foldCharge ? '#ff8f7a' : '#dff4ff');
-      row('CHARGE', `${Math.round(g.ship.foldCharge * 100)}%`, 196);
-      if (g.resonatorSystems.has(this.sel) && s.visited) row('SIGNAL', 'RESONATOR', 224, AM);
+      row('充能', `${Math.round(g.ship.foldCharge * 100)}%`, 196);
+      if (g.resonatorSystems.has(this.sel) && s.visited) row('信号', '共鸣器', 224, AM);
 
       const y = c.h - 48;
       if (isCur) {
         c.fill(20, y, w - 40, 36, 'rgba(143,228,255,0.08)');
-        c.text('CURRENT SYSTEM', w / 2, y + 24, { size: 15, color: DIM, align: 'center', track: 2 });
+        c.text('当前星系', w / 2, y + 24, { size: 15, color: DIM, align: 'center', track: 2 });
       } else {
         c.fill(20, y, w - 40, 36, canJump ? 'rgba(255,170,110,0.16)' : 'rgba(120,140,150,0.08)');
         c.fill(20, y, 3, 36, canJump ? AM : DIM);
-        c.text(canJump ? 'PRESS  J  TO FOLD' : 'INSUFFICIENT CHARGE', w / 2, y + 24,
+        c.text(canJump ? '按  J  跃迁' : '充能不足', w / 2, y + 24,
           { size: 15, color: canJump ? '#ffe0c0' : DIM, align: 'center', track: 2 });
       }
     });

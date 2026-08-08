@@ -1,10 +1,8 @@
-// Record the launch footage.
+// 录制发布影片。
 //
-// Runs the game in ?record=N mode, which hands the frame loop over to us: one
-// fixed 1/N step per captured frame. Capture is slower than real time, so
-// sampling a free-running loop would produce uneven motion — stepping by hand
-// means the footage plays back at exactly the intended speed no matter how long
-// the grab took.
+// 以 ?record=N 模式运行游戏，把帧循环交给我们：每捕获一帧固定推进 1/N 步。
+// 捕获慢于实时，因此对自由运行循环采样会产生不均匀的运动——手动步进意味着
+// 无论抓取耗时多久，素材都以精确的预期速度回放。
 //
 // Frames go straight down a pipe into one ffmpeg per shot, so each shot lands
 // as a finished clip and nothing touches the disk in between. Two measurements

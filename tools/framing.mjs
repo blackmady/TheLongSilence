@@ -1,10 +1,8 @@
-// How much of the seated frame is actually space?
+// 就座画面中有多少真的是太空？
 //
-// "The cockpit is so gigantic you can barely see any of space" is a real
-// complaint and it is measurable, so it should be measured rather than argued
-// about. This sits the player at the helm, renders the frame twice — once with
-// the cabin drawn and once with it hidden — and counts the pixels that did not
-// change. Those are the pixels the canopy lets through.
+// “驾驶舱大到几乎看不到太空”是一个真实的抱怨，而且它是可测量的，
+// 因此应当测量而非争论。本脚本让玩家坐上驾驶席，渲染两次画面——一次画
+// 舱内、一次隐藏——然后统计没有变化的像素。那些就是座舱盖放进来的像素。
 //
 // It also reports where the sky sits vertically, because a cockpit can pass on
 // area while still putting the window in a letterbox slot: a canopy that opens

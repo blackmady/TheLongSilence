@@ -1,29 +1,25 @@
 import * as THREE from 'three';
 
 /* ============================================================================
-   The director.
+   导演。
 
-   A cutscene here is a *camera*, not a canned animation: the world keeps
-   simulating underneath, the ship keeps flying, the traffic keeps moving, and
-   the director simply takes the camera away for a few seconds and puts it
-   somewhere better. That is why these sequences never desync and never need an
-   exit state — hand the camera back and the game is exactly where it was.
+   这里的过场动画是一台*摄像机*，而不是一段预制动画：世界在底下继续模拟，
+   飞船继续飞行，交通继续移动，而导演只是把摄像机拿走几秒，放到某个更好的
+   地方。这正是这些片段从不失同步、也从不需要退出状态的原因——把摄像机交还，
+   游戏便恰好停在原地。
 
-   Every shot is a function of normalised time returning an absolute eye
-   position, an absolute look-at point and a focal length. Anchors are resolved
-   *live* each frame against a subject, so a shot composed around a freighter
-   still works while the freighter is doing thirty kilometres a second.
+   每个镜头都是归一化时间的函数，返回绝对的视点位置、绝对的注视点与焦距。
+   锚点每帧都对着某个对象*实时*解析，因此围绕一艘货船构图的镜头，
+   即便那艘货船正以每秒三十公里的速度飞驰，依然成立。
 
-   Three rules, all of them learned from the footage:
+   三条规则，全都从素材中学来：
 
-   **Move the camera or move the subject, rarely both.** Two simultaneous
-   motions read as drift.
+   **要么移动摄像机，要么移动对象，极少同时移动。** 两个同时发生的运动读作漂移。
 
-   **Never cut to a shot whose framing you cannot predict.** Every shot's start
-   and end are anchored to something with a known position.
+   **绝不切到一个你无法预判构图的镜头。** 每个镜头的起止都锚定在位置已知的东西上。
 
-   **Ease everything.** A linear dolly is the single most obvious tell that a
-   camera is a matrix and not an object with mass.
+   **一切都要缓动。** 线性推轨是最明显不过的破绽，它暴露摄像机是一组矩阵，
+   而不是一个有质量的物体。
    ========================================================================== */
 
 const _a = new THREE.Vector3();
@@ -35,14 +31,14 @@ const ease = {
   in: (t) => t * t,
   out: (t) => 1 - (1 - t) * (1 - t),
   inOut: (t) => (t < 0.5 ? 2 * t * t : 1 - 2 * (1 - t) * (1 - t)),
-  // a long, slow settle — the camera arriving, not stopping
+  // 一次漫长而缓慢的落定——摄像机正在抵达，而不是停下
   settle: (t) => 1 - Math.pow(1 - t, 3.2),
 };
 
 /**
- * Anchors. Each returns a live absolute position.
- *   subject     the thing the shot is about
- *   offset      in the subject's own frame if it has one, else world axes
+ * 锚点。每个都返回实时的绝对位置。
+ *   subject    镜头所围绕的对象
+ *   offset     在对象自身坐标系中（若有），否则为世界坐标轴
  */
 function anchor(subject, off, out) {
   out.set(off[0], off[1], off[2]);
@@ -95,16 +91,13 @@ export class Director {
 
     const shot = this.seq.shots[this.shotIdx];
     this.t += dt;
-    /* A shot may refuse to end.
+    /* 一个镜头可以拒绝结束。
      *
-     * The landing and the liftoff both have a beat whose job is to cover work
-     * that takes an unknown amount of time — building a landscape, and letting
-     * the driver finish compiling forty shaders. Timing that beat by the clock
-     * means picking a number that is either too short on a slow machine (and
-     * the stall shows) or too long on a fast one (and the sequence drags). So a
-     * shot can hold: it stops at its end pose and waits, and the eases below
-     * clamp, so what the audience sees is a camera that has arrived and is
-     * simply holding the frame. */
+     * 降落与起飞各有一个节拍，其职责是掩盖耗时未知的工作——建造一片景观、
+     * 让驱动完成四十个着色器的编译。按钟表计时意味着挑选一个数字：在慢机器上
+     * 要么太短（停顿暴露无遗），在快机器上要么太长（片段拖沓）。因此镜头可以
+     * 保持：它停在结束姿态上等待，下面的缓动会钳制住，于是观众看到的是
+     * 一台已经抵达、只是静静持住画面的摄像机。 */
     if (this.t >= shot.dur && !(shot.hold && shot.hold(this.game))) {
       this.t -= shot.dur;
       this.shotIdx++;
@@ -118,13 +111,11 @@ export class Director {
     const e = (ease[s.ease] || ease.inOut)(u);
     const subj = typeof s.subject === 'function' ? s.subject(this.game) : s.subject;
     if (!subj) { this.stop(); return false; }
-    /* A shot may hang its eye on one thing and its gaze on another, and a
-       landing is why. The camera has to arrive glued to the ship — that is
-       what makes the scene change under the cloud invisible — and end up
-       standing on the ground watching it settle, which is the only framing in
-       which the last two hundred metres read as a descent at all. One anchor
-       cannot do both, so the eye rides a subject that eases from the ship to
-       the ground while the gaze stays on the ship throughout. */
+    /* 一个镜头可以把视点挂在一个东西上、把视线挂在另一个东西上——降落正是原因。
+       摄像机必须贴着飞船抵达——这正是云层下的场景切换不露痕迹的原因——然后
+       落到地面上看着它落定，这是唯一能让最后两百米读作一次下降的构图。
+       单个锚点无法两者兼得，因此视点搭载一个从飞船缓动到地面的对象，
+       而视线全程留在飞船上。 */
     const lsubj = s.lookSubject
       ? (typeof s.lookSubject === 'function' ? s.lookSubject(this.game) : s.lookSubject)
       : subj;
@@ -139,8 +130,8 @@ export class Director {
     anchor(lsubj, s.look[1] || s.look[0], _b);
     this.look.copy(_a).lerp(_b, e);
 
-    /* Upright. See applyCamera: a shot anchored to something with a rotation
-       can borrow it, and anything on a planet has to. */
+    /* 竖直。见 applyCamera：锚定在带旋转的对象上的镜头可以借用它，
+       而行星上的一切都必须如此。 */
     if (s.up === 'subject' && subj.quat) this.up.set(0, 1, 0).applyQuaternion(subj.quat);
     else if (s.up === 'look' && lsubj.quat) this.up.set(0, 1, 0).applyQuaternion(lsubj.quat);
     else this.up.set(0, 1, 0);
@@ -150,21 +141,17 @@ export class Director {
     return true;
   }
 
-  /** Write the current shot onto the game camera.
+  /** 将当前镜头写入游戏摄像机。
    *
-   * The up vector is the whole reason a landing looked like the ship rolling
-   * over on its back. It was world +Y, and world +Y means nothing on a planet:
-   * a landing site is a point on a sphere, and the one the origin system hands
-   * you sits 87 degrees off the world axis. So the camera held the world's idea
-   * of upright while the ship held the planet's, the horizon came in vertically
-   * and the hull read as inverted — every time, on most worlds, and it was the
-   * camera doing it rather than the ship.
+   * 上向量正是降落看起来像飞船仰面翻滚的全部原因。它曾是世界 +Y，而世界 +Y
+   * 在行星上毫无意义：降落点是球面上的一个点，起源星系给你的那个点偏离世界
+   * 轴 87 度。于是摄像机坚持世界的“竖直”，飞船却坚持行星的“竖直”，地平线
+   * 垂直切入画面，船壳读作倒置——每次如此，在大多数世界上，而且是摄像机
+   * 干的，不是飞船。
    *
-   * A shot that says `up: 'subject'` takes its upright from the thing it is
-   * pointed at instead. For the descent that is the hull, which is exactly what
-   * the audience is using to judge which way up the shot is; on the ground the
-   * anchors carry no rotation and it falls back to +Y, which down there is the
-   * local vertical anyway. */
+   * 声明了 `up: 'subject'` 的镜头改从它所指向的对象借用竖直。对下降来说那
+   * 就是船壳，恰好是观众判断镜头朝向的依据；在地面上，锚点不携带旋转，
+   * 于是回落到 +Y，而在那里 +Y 本来就是局部竖直方向。 */
   applyCamera(camera, origin) {
     camera.position.copy(this.eye).sub(origin);
     _a.copy(this.look).sub(origin);
@@ -180,12 +167,12 @@ export class Director {
 /* ============================================================== sequences */
 
 /**
- * Every sequence is built from the subject's own size, so the same code frames
- * a 90 m courier and a 4 km monolith without a single magic number.
+ * 每个片段都基于对象自身尺寸构建，因此同一套代码既能框住一艘 90 米的
+ * 信使船，也能框住一座 4 公里的巨碑，而无需任何魔法数字。
  */
 export const SEQUENCES = {
 
-  /** Dropping out of a fold into a new system. */
+  /** 从一次跃迁中脱离，进入一个新星系。 */
   arrival(game) {
     const ship = game.ship;
     const shipSubj = { absPos: ship.absPos, quat: ship.quat };
@@ -193,7 +180,7 @@ export const SEQUENCES = {
     const R = ship.length;
     return {
       title: game.system.stub.name,
-      sub: `${game.system.star.desc} · ${game.system.planets.length} worlds`,
+      sub: `${game.system.star.desc} · ${game.system.planets.length} 颗行星`,
       shots: [
         // 1. the ship arrives out of nothing, seen broadside and very close
         {
@@ -224,13 +211,13 @@ export const SEQUENCES = {
     };
   },
 
-  /** Attuning to a Resonator: the one moment the Choir answers. */
+  /** 调谐共鸣器：合唱团回应的唯一时刻。 */
   attune(game, body) {
     const R = body.radius;
     const subj = { absPos: body.absPos };
     return {
       title: body.name,
-      sub: 'RESONANCE ESTABLISHED',
+      sub: '共鸣已建立',
       shots: [
         // rise up the outside of the colonnade
         {
@@ -251,25 +238,22 @@ export const SEQUENCES = {
   },
 
   /**
-   * Going down, and there is only one shot in it.
+   * 向下走，而整段只有这一个镜头。
    *
-   * This used to be two here and three more on the other side: a broadside on
-   * the ship, a cut to the planet's limb seen from *inside* its own atmosphere
-   * shell — which is authored to be looked at from outside and draws as a brown
-   * smear from in there — a flash to white, and then three separate framings of
-   * a ship that had already landed. Five shots to move one vehicle from orbit
-   * to a dune, four of them cuts, and the reading of it was exactly right: a
-   * montage of a landing rather than a landing.
+   * 过去这边是两个、另一边还有三个：船的一舷侧面，切到从行星*自身大气壳*
+   * *内部*看到的星球边缘——那个壳是按从外部观看而制作的，从里面看会画成
+   * 一片棕色的涂抹——闪白，然后是三段不同构图的、已经降落的船。
+   * 五个镜头只为了让一艘船从轨道移动到沙丘，其中四个是切换，而观感恰恰
+   * 如此：一场关于降落的蒙太奇，而不是一场降落。
    *
-   * So: one camera, holding the ship at a fixed offset in the ship's own frame,
-   * easing in as the world comes up behind it. It never leaves the ship. The
-   * scene change happens inside the cloud deck (see Game.beginEntry) and the
-   * ground sequence picks the camera up at exactly the offset this one ends on,
-   * in a frame that has been flared level to match — so what continues after
-   * the swap is this shot, with weather in front of it and a landscape behind.
+   * 所以：一台摄像机，把船固定在船自身坐标系中的一个偏移上，随着世界在它
+   * 身后升起而缓动收拢。它从不离开船。场景切换发生在云层内部（见
+   * Game.beginEntry），地面片段在精确到这一个镜头结束时的偏移上接住摄像机，
+   * 画幅已经拉平到与之匹配——因此切换后继续的仍是这个镜头，前面是天气，
+   * 后面是风景。
    *
-   * The hold is the same mechanism as before: the landscape is being built and
-   * its shaders compiled behind the cloud, and that takes as long as it takes.
+   * 保持机制与之前相同：景观正在建造、着色器正在云层之后编译，
+   * 需要多久就等多久。
    */
   descent(game, body) {
     const ship = game.ship;
@@ -277,7 +261,7 @@ export const SEQUENCES = {
     const R = ship.length;
     return {
       title: body.name,
-      sub: 'DESCENT · ATTITUDE NOMINAL',
+      sub: '下降 · 姿态正常',
       shots: [
         {
           dur: 6.4, ease: 'inOut', subject: shipSubj, up: 'subject',
@@ -294,20 +278,18 @@ export const SEQUENCES = {
   },
 
   /**
-   * And going up: the landing played backwards, and one shot again.
+   * 向上走：降落倒放，依然只有一个镜头。
    *
-   * The camera starts on the ground, low and close under the flank, and the
-   * hull leaves it. Then the eye anchor climbs onto the ship — `groundCamAnchor`
-   * eases the other way on this side — so that by the time the deck closes over
-   * the frame the camera is travelling with the vehicle, which is the only way
-   * the change of scene underneath it can go unnoticed. The gaze never leaves
-   * the ship.
+   * 摄像机从地面开始，低矮而贴近船腹之下，船壳离开了它。随后视点锚点爬上
+   * 飞船——这一侧的 `groundCamAnchor` 向另一方向缓动——于是当云层合拢、
+   * 遮住画面时，摄像机正随飞行器一同移动，这是它下方的场景切换不被察觉的
+   * 唯一方式。视线从不离开飞船。
    */
   ascent(game, body) {
     const R = game.ship.length * 1000;      // the ground scene is in metres
     return {
       title: body.name,
-      sub: 'ASCENT · DRIVE LIT',
+      sub: '上升 · 引擎点火',
       shots: [
         {
           dur: 6.2, ease: 'inOut',
@@ -322,16 +304,15 @@ export const SEQUENCES = {
     };
   },
 
-  /** The other side of the same shot: out of the deck, with the world falling
-   *  away underneath. It opens at the offset the ground half ended on, in the
-   *  ship's own frame, and finishes wide enough that handing the camera back to
-   *  the chase rig is a move rather than a jump. */
+  /** 同一镜头另一侧：钻出云层，世界在下方远去。它从地面半程结束时的偏移
+   *  开始，位于船自身坐标系中，并以足够宽的画幅收尾，让摄像机交还给追击
+   *  支架成为一次移动，而非一次跳跃。 */
   ascentSpace(game, body) {
     const R = game.ship.length;
     const shipSubj = { absPos: game.ship.absPos, quat: game.ship.quat };
     return {
       title: body.name,
-      sub: 'ORBIT · CLEAR OF THE WELL',
+      sub: '轨道 · 已脱离重力井',
       shots: [
         {
           dur: 6.0, ease: 'settle', subject: shipSubj, up: 'subject',
@@ -344,23 +325,20 @@ export const SEQUENCES = {
   },
 
   /**
-   * The second half of the same shot, on the other side of the cloud.
+   * 同一镜头的下半段，在云层的另一侧。
    *
-   * Nothing is cut here. The eye starts at the offset the descent ended on,
-   * measured from a subject that is still the ship — `groundCamAnchor` is glued
-   * to the hull at this instant — so the frame the audience is looking at does
-   * not move when the world under it changes. Over the next few seconds that
-   * anchor eases down to the landing site while the gaze stays on the ship, and
-   * the camera turns from something flying alongside into something standing on
-   * the ground watching the ship come down to it. One move, no cuts, and it
-   * ends parked where the landed crane begins so the handback is not one
-   * either.
+   * 这里没有任何切换。视点从下降结束时所在的偏移开始，其测量对象仍是那艘
+   * 船——此刻 `groundCamAnchor` 正粘在船壳上——因此观众正看着的画幅，在它
+   * 之下的世界改变时纹丝不动。接下来几秒内，那个锚点缓降到着陆点，视线则
+   * 始终留在船上，摄像机从一架并飞的视角，变成站在地面上看着船朝自己降下
+   * 的视角。一次移动，零切换，并在落地吊臂开始的地方停下，于是交还也不是
+   * 一次切换。
    */
   touchdown(game, body) {
     const R = game.ship.length * 1000;    // the ground scene is in metres
     return {
       title: body.name,
-      sub: 'SURFACE · ATMOSPHERE NOMINAL',
+      sub: '地表 · 大气正常',
       shots: [
         {
           dur: 7.6, ease: 'inOut',
@@ -378,14 +356,14 @@ export const SEQUENCES = {
     };
   },
 
-  /** Coming alongside a station. */
+  /** 驶向一座空间站。 */
   approach(game, body) {
     const R = body.radius;
     const subj = { absPos: body.absPos };
     const ship = { absPos: game.ship.absPos, quat: game.ship.quat };
     return {
       title: body.name,
-      sub: 'APPROACH · HOLDING',
+      sub: '接近 · 保持位置',
       shots: [
         // the station passes overhead
         {

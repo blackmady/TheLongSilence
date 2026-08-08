@@ -1,22 +1,19 @@
 import * as THREE from 'three';
 import { PostFX } from '../gfx/PostFX.js';
 
-/* Renderer, sizing, quality tiering and the frame loop. */
+/* 渲染器、尺寸、画质分档与帧循环。 */
 
 /**
- * Pick a quality tier from what the browser will admit about the machine.
+ * 从浏览器愿意承认的机器信息里挑选画质档位。
  *
- * `navigator.deviceMemory` is Chromium-only — Safari and Firefox return
- * undefined. Defaulting that to 4 and then testing `mem <= 4` pinned every
- * Safari user to the medium tier regardless of hardware, which capped the
- * canvas at 1.5x on a 2x display: rendered at 75% linear scale and upscaled by
- * the browser. Blurry and aliased at the same time is exactly what that looks
- * like, and it also halved MSAA. So memory is now only ever read as a
- * *positive* signal;
- * unknown means unknown, not slow.
+ * `navigator.deviceMemory` 仅 Chromium 支持——Safari 与 Firefox 返回
+ * undefined。把它默认成 4 再测试 `mem <= 4`，会把所有 Safari 用户钉在中档，
+ * 无论硬件如何：在 2x 屏幕上画布被限制为 1.5x，以 75% 线性比例渲染再由
+ * 浏览器放大。既模糊又锯齿，正是那副模样；MSAA 也被砍半。因此内存如今
+ * 只被当作*正向*信号读取；未知就是未知，而不是慢。
  *
- * Window size is likewise not evidence about the GPU — a small window on a
- * fast machine is still a fast machine. Only a genuinely small *screen* counts.
+ * 窗口大小同样不是关于 GPU 的证据——快机器上的小窗口仍然是快机器。
+ * 只有真正小的*屏幕*才算数。
  */
 export function detectQuality() {
   const mem = navigator.deviceMemory;                     // undefined off Chromium

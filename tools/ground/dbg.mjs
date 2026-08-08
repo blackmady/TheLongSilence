@@ -1,4 +1,4 @@
-/* Scratch: same mountain pose, once per terrain debug channel. */
+/* 草稿：同一山体姿态，每个地形调试通道各一次。 */
 import { chromium } from 'playwright';
 import { mkdirSync } from 'fs';
 import { bootGame } from '../boot.mjs';

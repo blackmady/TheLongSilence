@@ -1,23 +1,20 @@
 import * as THREE from 'three';
 
 /* ============================================================================
-   The fold tunnel.
+   跃迁隧道。
 
-   A screen-aligned quad, drawn before the opaque pass with depth writes off,
-   so the ship silhouettes against it instead of being washed away by it.
+   一块屏幕对齐的四边形，在不透明趟之前、关闭深度写入绘制，
+   因此飞船在它前方映出剪影，而不会被它冲走。
 
-   The whole effect lives in *tunnel space*: the ray through each pixel is
-   resolved into an angle around the direction of travel and an angular
-   distance from it, and the second is inverted into a depth coordinate. A
-   feature at a fixed depth therefore compresses toward the vanishing point
-   exactly as a real one would, and scrolling that coordinate sweeps the whole
-   field past the camera at once — no particles, no overdraw, no popping.
+   整个效果活在*隧道空间*中：穿过每个像素的光线被解析为绕行进方向的角度
+   与距它的角距离，后者被反转为深度坐标。因此固定深度上的特征会像真实
+   的那样朝消失点压缩，滚动该坐标则让整个场一次掠过相机——没有粒子、
+   没有过度绘制、没有闪现。
 
-   Three things separate this from a line-particle starfield:
+   三件事将它与线条粒子星场区分开：
 
-   - The centre is the brightest thing on screen, not a hole. Streaks are born
-     out of a caustic and stretch outward. (It doubles as the fix for the
-     aliasing the 1/angle mapping causes near the axis: the pattern is faded
+   - 中心是屏幕上最亮的东西，而非一个洞。光痕从焦散中诞生并向内拉伸。
+     （它还兼任修复 1/角度映射在轴附近造成的锯齿：图案被淡出
      out under the core well before its features fall below a pixel.)
    - The main layer is sampled three times at slightly different depths, once
      per channel, which splits every streak into a blue leading edge and a red

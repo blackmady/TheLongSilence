@@ -1,5 +1,5 @@
-// Contact sheet: tile a set of shots into one image so a whole survey can be
-// judged in a single look instead of one file at a time.
+// 联络表：把一组截图拼成一张图，让整次巡检能被一眼评估，
+// 而不是一个文件一个文件地看。
 //   node tools/sheet.mjs shots/*.png --out shots/_sheet.png [--cols 4] [--w 520]
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';

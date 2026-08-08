@@ -1,11 +1,11 @@
-/* Ground bench: boot once, land on a list of worlds, pin the clock, measure and
-   shoot.  Not part of the ship — a scratch tool for the landed-scene work.
+/* 地面基准：启动一次，降落在一列世界上，钉住时钟，测量并拍摄。
+   不属于飞船本身——是落地场景工作的临时工具。
 
    node tools/gnd.mjs --out /tmp/gnd/base --worlds terran,desert,barren,ice
                       --elev 0.34 [--also 0.08,0.7] [--dpr 2 --w 1512 --h 945]
 
-   Everything it reports is taken with `landed.t` redefined as a non-writable
-   getter after setSunElevation, so two runs shoot the same sun. */
+   它报告的一切都在 setSunElevation 之后把 `landed.t` 重定义为不可写 getter
+   的情况下取得，因此两次运行拍摄的是同一个太阳。 */
 import { chromium } from 'playwright';
 import { mkdirSync, writeFileSync } from 'fs';
 import { readFileSync } from 'fs';

@@ -1,9 +1,8 @@
-/* Where the landed frame goes, by subtraction, at one pinned pose.
+/* 落地画面花在了哪里，通过减法，在同一个钉住的姿态上。
  *
- * Same pinning as gndperf: resolution held, `adapt` stubbed, vsync off,
- * `landed.t` a non-writable getter. Each row hides one thing and re-measures;
- * the difference is that thing's cost, and only differences taken inside one
- * run mean anything on a loaded machine.
+ * 钉住方式与 gndperf 相同：分辨率固定、`adapt` 打桩、vsync 关闭、
+ * `landed.t` 是不可写 getter。每行隐藏一样东西并重新测量；差值就是
+ * 那样东西的成本，而在负载机器上，只有同一趟运行内部的差值才有意义。
  *
  *   node tools/gndattr.mjs [--dpr 2 --w 1512 --h 945] [--trials 6]
  */

@@ -5,19 +5,17 @@ import { HULL_LIGHT } from '../gfx/greeble.js';
 import { LOGD_V_PARS, LOGD_V, LOGD_F_PARS, LOGD_F } from '../gfx/glsl/noise.js';
 
 /* ============================================================================
-   Asteroid fields.
+   小行星带。
 
-   Real belts are mostly vacuum, so scattering a few thousand rocks across
-   millions of km would show you nothing. Instead we keep a dense local shell
-   of instances around the ship and recycle any rock that falls behind — the
-   belt reads as thick and dangerous exactly where the player is looking.
+   真实的小行星带大部分是真空，因此在数百万公里内撒几千块岩石你什么也
+   看不见。相反，我们在飞船周围保持一层稠密的本地实例壳，并回收任何落到
+   身后的岩石——带区恰恰在玩家看的地方读作厚实而危险。
 
-   Three things have to be true or a belt reads as a dozen grey lumps in a void:
+   三件事必须成立，否则带区会读作虚空中的十几块灰色疙瘩：
 
-   **It must be a volume, not a handful of objects.** Boulders alone give you
-   separated silhouettes with nothing between them. Under them sits a much
-   larger population of chips, and under *that* a mote field — collision
-   families clumped into wisps, not white noise — so there is always something
+   **它必须是一个体积，而不是一把对象。** 单靠巨石你得到的是彼此之间
+   空无一物的分离剪影。它们之下是一大群更小的碎屑，再之下是一片尘埃场——
+   碰撞族聚成缕缕，而非白噪声——因此总有东西
    at every depth and the parallax does the work.
 
    **The rock has to be rock at arm's length.** One instanced standard material

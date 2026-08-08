@@ -1,9 +1,9 @@
 import { NOISE, LOGD_V_PARS, LOGD_V, LOGD_F_PARS, LOGD_F } from '../gfx/glsl/noise.js';
 
 /* ============================================================================
-   Runtime planet shading: surface, clouds, atmosphere, gas giants, rings.
-   All maths happens in *object space with planet radius = 1*, which keeps
-   float precision sane no matter how large the world actually is.
+   运行时行星着色：表面、云层、大气、气态巨行星、环。
+   所有数学都发生在*行星半径 = 1 的对象空间*中，无论世界实际多大，
+   浮点精度都保持理智。
    ========================================================================== */
 
 /* ------------------------------------------------------------------ WEATHER

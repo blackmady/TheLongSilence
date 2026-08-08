@@ -2,22 +2,19 @@ import * as THREE from 'three';
 import { NOISE, LOGD_V_PARS, LOGD_V, LOGD_F_PARS, LOGD_F } from '../gfx/glsl/noise.js';
 
 /* ============================================================================
-   A star: photosphere + corona/chromosphere shell + camera-facing glare disc.
+   一颗恒星：光球 + 日冕/色球壳层 + 面向相机的眩光圆盘。
 
-   Two numbers govern everything here.
+   这里一切由两个数字主宰。
 
-   The first is the tonemap's clip point. After auto-exposure bottoms out at
-   0.045 and the pre-contrast curve, AgX returns pure white at roughly 130
-   units of scene radiance, 241 at 50, 185 at 12 and 116 at 4. So the *whole*
-   readable range of a star's surface lives between about 2 and 130, and a
-   photosphere authored flat at 120 is a disc of white paper by construction —
-   which is exactly what this used to be. The surface is therefore authored so
-   that only the hottest granules near disc centre clip; the mean sits near 60
-   and the limb falls to single digits. That is also what a correctly exposed
-   photograph of the Sun looks like.
+   第一个是色调映射的截断点。自动曝光在 0.045 见底、经过前置对比度曲线之后，
+   AgX 在大约 130 单位场景辐射度处返回纯白，50 处 241、12 处 185、4 处 116。
+   因此一颗恒星表面的*全部*可读区间大约在 2 到 130 之间，而平铺在 120 的
+   光球按构造就是一张白纸圆盘——这正是它过去的样子。因此表面被这样创作：
+   只有盘心附近最炽热的米粒组织会截断；均值落在 60 附近，边缘落到个位数。
+   这也正是正确曝光的太阳照片的样子。
 
-   The second is the projected silhouette. A camera at d radii sees the disc
-   edge at d/sqrt(d*d-1) radii measured on the plane through the star's centre,
+   第二个是投影轮廓。距 d 倍半径的相机，在过恒星中心的平面上测得的盘缘
+   位于 d/sqrt(d*d-1) 倍半径，
    not at 1.0 — at three radii that is 1.061 — and if the star is off the
    optical axis it is not even a circle. Every billboard feature that is
    supposed to hug the limb (the chromosphere, the prominences, the hole punched

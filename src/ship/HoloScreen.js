@@ -1091,11 +1091,10 @@ export class ScreenGfx {
   }
 
   /**
-   * A rank of small mono glyphs at fixed pitch — the reference's "G G G" row.
+   * 一排固定间距的小型等宽字形——参考照片中那行 “G G G”。
    *
-   * Deliberately not readable at a glance and deliberately not decorative
-   * either: a channel identifier and a one-character state, which is what a
-   * bus page actually shows.
+   * 刻意让人无法一眼读懂，也刻意不只是装饰：一个通道标识符与一个单字符
+   * 状态，这正是总线页实际显示的东西。
    */
   glyphs(x, y, pitch, items, { size = 7 } = {}) {
     items.forEach(([ch, col, on], i) => {

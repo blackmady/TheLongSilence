@@ -5,14 +5,13 @@ import { CHOIR_HUE, place, slab, weld, palette, dress } from '../gfx/greeble.js'
 import { buildStation } from './Station.js';
 
 /* ============================================================================
-   Things the Choir left behind.
+   合唱团留下的东西。
 
-   Resonators  — monoliths. The only objects in the game that are *not* natural,
-                 and the only ones with a material language of their own.
-   Derelicts   — a station that came apart, forty thousand years ago, and has
-                 been spreading along its own orbit ever since.
-   Wrecks      — everyone else who came looking.
-   Beacons     — the signal sources that lead you to all of the above.
+   共鸣器    —— 巨碑。游戏中唯一*非自然*的物体，也是唯一拥有自己材质语言
+                的物体。
+   废弃站    —— 一座在四万年前解体的空间站，此后一直沿自己的轨道扩散。
+   残骸      —— 其他所有前来寻找的人。
+   信标      —— 引领你找到以上一切的信号源。
    ========================================================================== */
 
 /* ------------------------------------------------------------- monolith */

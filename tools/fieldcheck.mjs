@@ -1,8 +1,7 @@
-/* Does the JS transliteration of the height field agree with the GLSL?
+/* JS 转写的高度场与 GLSL 一致吗？
  *
- * Compiles the real FIELD chunk into a WebGL2 program in a headless page,
- * evaluates groundYFlat at a few hundred scattered points, and diffs it
- * against Surface.heightAt for the same landed world.
+ * 在无头页面中把真正的 FIELD 块编译进一个 WebGL2 程序，在数百个散点上
+ * 求值 groundYFlat，并与同一落地世界的 Surface.heightAt 做差分。
  */
 import { chromium } from 'playwright';
 import { bootGame } from '/Users/anshu/Code/SpaceGame2/tools/boot.mjs';

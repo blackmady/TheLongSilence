@@ -1,11 +1,11 @@
-/* Ground A/B: boot once, land, pin the clock, then shoot a list of scripted
-   mutations of the same pinned pose. For isolating which term owns an artifact.
+/* 地面 A/B：启动一次，降落，钉住时钟，然后拍摄同一钉住姿态的一列脚本化
+   变异。用于隔离哪个项拥有某个伪影。
 
    node tools/gndab.mjs --out /tmp/gc/ab --world terran --elev 0.34 \
         --pose foot --cases "base:;nonrm:g.surface.U.uTerK.value.x=0"
 
-   Every case is applied on top of the previous one being undone, so each is
-   given as a pair sep by '|' — apply|undo. If no undo is given the page is
+   每个用例都应用在前一个被撤销之上，因此每个都以 '|' 分隔的一对给出——
+   apply|undo。若未给出撤销，则页面
    re-landed between cases. */
 import { chromium } from 'playwright';
 import { mkdirSync } from 'fs';

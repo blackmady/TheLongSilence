@@ -1,23 +1,19 @@
 import * as THREE from 'three';
 
 /* ============================================================================
-   Interior surfacing.
+   舱内蒙皮。
 
-   This file used to hold a procedural surface model — panel grid, weld beads,
-   rivets, anti-slip tread, stencilled markings, woven cloth and a bump built
-   from screen-space derivatives, all evaluated analytically per fragment. It
-   was carefully tuned and it could not be made to stop aliasing, for a reason
-   no amount of tuning reaches: **MSAA antialiases triangle coverage, not
-   shading.** It resolves one shaded sample per pixel across a geometric edge.
-   Every one of those features was a hard step computed *inside* the shader,
-   and there was no mip chain to prefilter it because there were no textures.
-   Widening each step by its pixel footprint (which the old model did, at
-   length) keeps a transition a pixel wide; it cannot make it a *filtered
-   average* of the fifty features that really fall under that pixel at a
-   grazing angle. Starfield and everything like it ship prefiltered, mipmapped
-   maps. That is the whole difference.
+   这个文件曾承载一个程序化表面模型——面板网格、焊缝、铆钉、防滑纹、
+   模板标记、编织布料，以及由屏幕空间导数构建的凹凸，全部逐片段解析求值。
+   它被精心调校过，却无法停止锯齿，原因不是调校所能触及的：**MSAA 抗锯齿
+   的是三角形覆盖率，不是着色。** 它在几何边缘上每像素解析一个着色样本。
+   那些特性中的每一个都是*着色器内部*计算出来的硬台阶，而且因为没有纹理，
+   也就没有 mip 链可以预滤波。按像素足迹加宽每个台阶（旧模型长篇大论地
+   做过）只能让过渡保持一个像素宽；它无法成为在掠射角下那个像素下真正
+   五十个特性的*滤波平均*。星空以及诸如此类的东西，都是以预滤波、带 mip
+   贴图的方式交付的。这就是全部区别。
 
-   So the surface model now lives in Blender, baked into tiling maps:
+   因此表面模型如今住在 Blender 里，烘焙成可平铺贴图：
 
      · a 2 m tile of hull plating and a 1.5 m tile of deck plate, each with
        albedo, a filtered normal derived from a ray-traced height field, and a

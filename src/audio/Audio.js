@@ -1,27 +1,24 @@
 /* ============================================================================
-   Procedural audio.
+   程序化音频。
 
-   Every previous version of this file droned, and the cause was structural
-   rather than tonal: oscillators were started once and never stopped, with only
-   their gain modulated. However pretty the harmony is, an unbroken sound reads
-   as machinery, not music. Two other things made it worse — a sine sub held
-   open forever, and room tone made by running pink noise through a *resonant
-   bandpass at 320 Hz*, which is precisely how you synthesise a honk.
+   这个文件的每个旧版本都在嗡嗡响，原因是结构性的而非音色的：振荡器一旦
+   启动就永不停止，只调制增益。无论和声多么动听，一声不断的声音读作机器，
+   而非音乐。另有两件事让它更糟——一个永远敞开的正弦低音，以及把粉噪送进
+   *320 Hz 的谐振带通*来制作环境底噪，那正是合成一声喇叭的方法。
 
-   So this version is built out of events, not held notes:
+   因此这个版本由事件构成，而非持续音符：
 
-     · Music happens in phrases. A phrase is scheduled all at once — a pad
-       swell, a bass note, a few plucked tones — and then the score is silent
-       for several seconds before the next one. The rests are the point: silence
-       is what makes what surrounds it sound composed rather than emitted.
-     · Every voice is created, enveloped, stopped and discarded. Nothing
-       sustains. If the game paused mid-phrase the score would simply end.
-     · Room tone is broadband air, gently lowpassed with no resonant peak, sat
-       near the floor of audibility so you notice it only when it stops.
-     · The drive is rushing air, gated hard to true zero at idle, and gains a
-       tonal body only when it is genuinely working.
+     · 音乐以乐句发生。一个乐句一次性排定——一次铺底渐强、一个低音、
+       几声拨弦——然后乐谱沉默几秒，才进入下一句。休止才是重点：
+       正是沉默让周围的声音听起来是作曲，而非排放。
+     · 每个声部都被创建、包络、停止、丢弃。没有什么是持续的。
+       如果游戏在乐句中途暂停，乐谱就会干脆地结束。
+     · 环境底噪是宽频的空气，被轻轻低通、无谐振峰，坐在可闻阈附近，
+       于是你只在它停止时才会注意到它。
+     · 引擎是呼啸的气流，怠速时被硬闸到真正的零，只有真正做功时才获得
+       一个音调性的主体。
 
-   Everything is synthesised. There are no assets.
+   一切都是合成的。没有任何音频资产。
    ========================================================================== */
 
 // Roots in semitones from A, with the chord tones stacked above them. A slow

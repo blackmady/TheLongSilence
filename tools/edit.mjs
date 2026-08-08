@@ -1,10 +1,9 @@
-// Cut the captured shots into the launch video.
+// 把捕获的镜头剪进发布影片。
 //
-// capture.mjs now records each shot at its final length, so there is nothing to
-// trim here: this joins the clips, renders the end card with the game's own
-// type, and lays the bounced score underneath. Hard cuts throughout — a demo
-// this short has no room for transitions, and the game's own changes of place
-// (walking -> seated -> flying) already carry the rhythm.
+// capture.mjs 现在按最终长度录制每个镜头，因此这里无需裁剪：
+// 本脚本拼接片段，用游戏自己的字体渲染片尾卡，并把渲染好的乐谱垫在下面。
+// 全程硬切——这么短的演示没有空间做转场，而游戏自身的场所切换
+// （行走 -> 就座 -> 飞行）已经承载了节奏。
 //
 //   node tools/edit.mjs [--out shots/long-silence.mp4]
 import { chromium } from 'playwright';

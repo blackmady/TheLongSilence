@@ -1,11 +1,10 @@
-/* Colour and local-contrast statistics for a crop of a frame.
+/* 一帧某块裁切的色彩与局部对比度统计。
  *
- * "The ground has no albedo variation" is not actionable; "per-channel std
- * [30,20,11] against the reference's [55,53,45], saturation std 0.047 against
- * 0.171" is. Reports, over the region given (default: the bottom third, which
- * on a landed frame is the ground two metres from your boots):
+ * “地面没有反照率变化”不是可执行的反馈；“每通道 std [30,20,11]，对照
+ * 参考的 [55,53,45]，饱和度 std 0.047 对照 0.171”才是。在给定的区域内报告
+ * （默认：底部三分之一，在落地画面上正是离你靴子两米的地面）：
  *
- *   per-channel std, saturation std, local std (8 px window), p1..p99 span.
+ *   每通道 std、饱和度 std、局部 std（8px 窗口）、p1..p99 跨度。
  *
  *   node tools/chroma.mjs shot.png [--crop W:H:X:Y]
  */

@@ -9,15 +9,15 @@ import {
 } from './planetShaders.js';
 
 /* ============================================================================
-   A world.
+   一个世界。
 
-   Hierarchy (everything below `group` lives in unit-radius object space):
+   层级（`group` 之下的一切都生活在单位半径的对象空间中）：
 
-     group  position = world position, quaternion = axial tilt, scale = radius
-       ├── surface   unit sphere, displaced from the baked height channel
-       ├── clouds    unit sphere @ 1.012
-       ├── atmo      unit sphere @ 1 + atmosphere height
-       └── rings     annulus in the equatorial plane
+     group  位置 = 世界位置，四元数 = 轴倾角，缩放 = 半径
+       ├── surface   单位球，从烘焙高度通道位移
+       ├── clouds    单位球 @ 1.012
+       ├── atmo      单位球 @ 1 + 大气高度
+       └── rings     赤道平面上的圆环
 
    The planet's *rotation* is a shader uniform rather than a transform, so the
    ring-shadow and cloud-shadow maths all share one consistent frame.

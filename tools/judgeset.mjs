@@ -1,9 +1,8 @@
-// Rebuild the review set an independent judge looks at.
+// 重建独立评审者观看的评审集。
 //
-// The survey exists to catch regressions; this exists to be *judged*. It runs
-// the same set-pieces, then adds the two the survey cannot stage from a single
-// boot — standing on a planet, and the same planet at a different hour — and
-// copies everything into shots/judge/ so a reviewer has one directory to read.
+// 巡检用于捕捉回归；这份则用于被*评审*。它运行相同的定式场景，然后加入
+// 巡检无法在单次启动中编排的两个——站在行星上，以及同一行星在不同时刻——
+// 并把一切复制进 shots/judge/，让评审者只有一个目录可读。
 //
 //   node tools/judgeset.mjs
 import { execFileSync } from 'node:child_process';

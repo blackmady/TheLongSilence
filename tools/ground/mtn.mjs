@@ -1,5 +1,5 @@
-/* Scratch: land, find the biggest relief within a few km, stand a set distance
-   from it and shoot it. For chasing the banding artifact on mountain flanks.
+/* 草稿：降落，在数公里内找到最大的起伏，站在距它一段固定距离处拍摄它。
+   用于追查山体侧面的条带伪影。
    node tools/ground/mtn.mjs --out /tmp/mtn/base --world terran --elev 0.30 --range 2600 */
 import { chromium } from 'playwright';
 import { mkdirSync } from 'fs';

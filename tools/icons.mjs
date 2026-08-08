@@ -1,8 +1,7 @@
-// Render the icon SVG to the PNG sizes the platforms actually ask for.
+// 把图标 SVG 渲染成平台实际要求的 PNG 尺寸。
 //
-// Home-screen icons are masked by the OS, so they get a full-bleed square
-// background rather than the rounded rect the browser tab uses — a rounded
-// icon inside an OS mask ends up with a visible dark border.
+// 主屏图标会被操作系统裁剪，因此它们获得满出血的方形背景，而非浏览器标签
+// 所用的圆角矩形——OS 裁剪框内的圆角图标最终会带上一圈可见的深色边框。
 //
 //   node tools/icons.mjs
 import { chromium } from 'playwright';

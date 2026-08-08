@@ -1,4 +1,4 @@
-/* A fixed set of surface frames, so two runs are comparable.
+/* 一组固定的地表画面，让两次运行可比。
    node tools/ground/hero.mjs --out /tmp/hero/r1 [--world terran] [--elev 0.34] */
 import { chromium } from 'playwright';
 import { mkdirSync } from 'fs';

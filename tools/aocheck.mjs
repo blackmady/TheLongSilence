@@ -1,13 +1,11 @@
-/* Is the AO's depth reconstruction actually right?
+/* AO 的深度重建真的正确吗？
  *
- * The renderer writes two different depth encodings in one frame — the world
- * and the ground scene use three's logarithmic buffer, the cabin is a second
- * pass on the ordinary projection curve — and PostFX normalises both into one
- * linear view-space Z buffer before the occlusion pass ever runs. A mistake
- * there does not throw and does not look like a mistake: you get occlusion
- * that is plausible in one scene and inverted or missing in another.
+ * 渲染器在一帧中写入两种不同的深度编码——世界与地面场景使用 three 的
+ * 对数缓冲，舱内是在普通投影曲线上的第二趟——而 PostFX 在遮挡趟运行之前
+ * 把两者归一化进一个线性视图空间 Z 缓冲。那里的错误不会抛异常，看起来也
+ * 不像错误：你会得到在一个场景中合理、在另一个场景中颠倒或缺失的遮挡。
  *
- * So it is checked against arithmetic instead of against a screenshot. For a
+ * 因此它用算术对照检查，而非对照截图。对于一个
  * scattering of pixels this fires a raycast at the same pixel, takes the hit
  * point, transforms it into view space, and compares -z against what came back
  * out of the linear-depth target. Anything over a fraction of a percent means

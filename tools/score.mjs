@@ -1,9 +1,8 @@
-// Bounce the game's own score to a WAV.
+// 把游戏自己的乐谱渲染成 WAV。
 //
-// The music is synthesised, not sampled, so there is no track to drop under the
-// footage — but the same code that performs it live will perform it into an
-// OfflineAudioContext. Phrases are scheduled explicitly across the timeline
-// because offline rendering has no wall clock for update() to advance against.
+// 音乐是合成的而非采样的，因此没有音轨可以垫在素材下面——但同一套
+// 实时演奏的代码也会演奏进一个 OfflineAudioContext。乐句沿时间轴显式排定，
+// 因为离线渲染没有墙钟可供 update() 推进。
 //
 // Two arrangements:
 //

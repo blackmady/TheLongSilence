@@ -2,9 +2,8 @@ import * as THREE from 'three';
 import { PLANET_TYPES } from './planetBakeShader.js';
 
 /* ============================================================================
-   Deterministic universe generation. Everything — star classes, orbits,
-   surface palettes, anomaly placement, names — falls out of a single integer
-   seed, so a system looks identical every time you return to it.
+   确定性宇宙生成。一切——恒星类型、轨道、地表配色、异常布局、命名——
+   都由单个整数种子决定，因此每次回到同一星系，它都一模一样。
    ========================================================================== */
 
 export function mulberry32(a) {
@@ -46,15 +45,15 @@ function rngi(rnd, a, b) { return Math.floor(a + rnd() * (b - a + 1)); }
 /* ------------------------------------------------------------ star classes */
 
 const STAR_CLASSES = [
-  { cls: 'M', w: 30, temp: [2600, 3700], radius: [22000, 34000], lum: 0.30, desc: 'Red dwarf' },
-  { cls: 'K', w: 20, temp: [3900, 5200], radius: [30000, 44000], lum: 0.62, desc: 'Orange dwarf' },
-  { cls: 'G', w: 17, temp: [5300, 6000], radius: [38000, 52000], lum: 1.00, desc: 'Yellow main sequence' },
-  { cls: 'F', w: 11, temp: [6100, 7300], radius: [45000, 60000], lum: 1.55, desc: 'Yellow-white dwarf' },
-  { cls: 'A', w: 7, temp: [7500, 9800], radius: [52000, 70000], lum: 2.40, desc: 'White main sequence' },
-  { cls: 'B', w: 4, temp: [11000, 21000], radius: [66000, 92000], lum: 4.10, desc: 'Blue giant' },
-  { cls: 'WD', w: 5, temp: [12000, 26000], radius: [6000, 9000], lum: 0.55, desc: 'White dwarf' },
-  { cls: 'PSR', w: 3, temp: [30000, 40000], radius: [4200, 6000], lum: 0.85, desc: 'Neutron star' },
-  { cls: 'C', w: 3, temp: [2300, 3000], radius: [70000, 105000], lum: 0.75, desc: 'Carbon giant' },
+  { cls: 'M', w: 30, temp: [2600, 3700], radius: [22000, 34000], lum: 0.30, desc: '红矮星' },
+  { cls: 'K', w: 20, temp: [3900, 5200], radius: [30000, 44000], lum: 0.62, desc: '橙矮星' },
+  { cls: 'G', w: 17, temp: [5300, 6000], radius: [38000, 52000], lum: 1.00, desc: '黄色主序星' },
+  { cls: 'F', w: 11, temp: [6100, 7300], radius: [45000, 60000], lum: 1.55, desc: '黄白矮星' },
+  { cls: 'A', w: 7, temp: [7500, 9800], radius: [52000, 70000], lum: 2.40, desc: '白色主序星' },
+  { cls: 'B', w: 4, temp: [11000, 21000], radius: [66000, 92000], lum: 4.10, desc: '蓝巨星' },
+  { cls: 'WD', w: 5, temp: [12000, 26000], radius: [6000, 9000], lum: 0.55, desc: '白矮星' },
+  { cls: 'PSR', w: 3, temp: [30000, 40000], radius: [4200, 6000], lum: 0.85, desc: '中子星' },
+  { cls: 'C', w: 3, temp: [2300, 3000], radius: [70000, 105000], lum: 0.75, desc: '碳巨星' },
 ];
 
 function pickStarClass(rnd) {
@@ -607,7 +606,7 @@ export function generateSystem(stub) {
       count: rngi(rnd, 1400, 3200),
       seed: rnd() * 1000,
       tint: lin([0x6b625a, 0x5a5e66, 0x74655a, 0x4e5250][Math.floor(rnd() * 4)]),
-      name: `${stub.name} Belt ${String.fromCharCode(65 + i)}`,
+      name: `${stub.name} 小行星带 ${String.fromCharCode(65 + i)}`,
     });
   }
 

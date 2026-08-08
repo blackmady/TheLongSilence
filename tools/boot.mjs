@@ -1,13 +1,10 @@
-// Get a page from "just loaded" to "running the game", and stay there.
+// 让页面从“刚加载完”进入“游戏在运行”，并停留在那里。
 //
-// The dev server hot-reloads on any source edit, which throws away the JS
-// context and puts the title card back up. A capture that started before the
-// reload finishes happily and screenshots the title screen — every assertion
-// still passes, and the only clue is that the picture is wrong. So: click
-// through the DOM rather than through Playwright's actionability checks (the
-// overlay animates its opacity and a click landing mid-transition is silently
-// discarded), then verify the overlay is actually gone, and start over if it
-// is not.
+// 开发服务器会在任何源码编辑时热重载，这会丢弃 JS 上下文并把标题卡重新
+// 立起来。在重载前开始的捕获会愉快地完成并截下标题画面——每一条断言依然
+// 通过，唯一的线索是图片是错的。因此：通过 DOM 点击而非 Playwright 的
+// 可操作性检查（覆盖层会动画它的不透明度，落在过渡中途的点击会被悄悄丢弃），
+// 然后验证覆盖层确实消失，若没有则重新开始。
 export async function bootGame(page, { setup = null, settle = 0, after = null, tries = 4 } = {}) {
   for (let attempt = 1; attempt <= tries; attempt++) {
     let out, reason = 'game never came up';
